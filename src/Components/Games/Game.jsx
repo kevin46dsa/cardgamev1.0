@@ -9,7 +9,7 @@ const Game = () => {
     let { id } = useParams();
 
     const [randomNumber, setRandomNumber] = useState(Game1)
-    const [card, setCard] = useState(Game1[0])
+    const [card, setCard] = useState("")
 
 
     function getRandomCard(){
@@ -27,9 +27,14 @@ const Game = () => {
             <Container>
                 <Row xs={1} sm={1} md={2} lg={3} xl={3} xxl={4}>
                 <Col key={id}>
-                {!card ?  <Image  src={"https://cdn.pixabay.com/photo/2020/10/13/07/43/game-5651051_1280.jpg"}/>:
+                {card === "" ?  
+                <Image  src='https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/table%20no..png?alt=media&token=b25b160c-b5f7-4583-a7a7-e17538383f71'/>
+                :
+                null}    
+                {card === undefined && card !== "" ?  
+                <Image  src={"https://cdn.pixabay.com/photo/2020/10/13/07/43/game-5651051_1280.jpg"}/>
+                :
                 <Image src={randomNumber}/>}
-                
                 <button onClick={()=>getRandomCard()}>Pick Random Card</button></Col>
                 </Row>
             </Container>
