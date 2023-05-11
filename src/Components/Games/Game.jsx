@@ -1,44 +1,57 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import {useParams } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col  from "react-bootstrap/Col";
 import Image from 'react-bootstrap/Image'
 import { Game1 } from '../../Games';
-const Game = () => {
+import "./Game.css"
+const Game = ({data}) => {
     let { id } = useParams();
-
-    const [randomNumber, setRandomNumber] = useState(Game1)
-    const [card, setCard] = useState("")
+    console.log(data)
+    const [randomNumber, setRandomNumber] = useState([])
+    const [card, setCard] = useState("Start")
 
 
     function getRandomCard(){
-        console.log("randomcardPicked")
         
-        let  item = randomNumber[Math.floor(Math.random()*randomNumber.length)];
+        console.log("randomcardPicked")
+        console.log(randomNumber)
+        let item = randomNumber[Math.floor(Math.random()*randomNumber.length)];
         console.log(item)
         setCard(item)
         setRandomNumber(randomNumber.filter((e)=>(e !== item)))
     }
-
+    /*
+    useEffect(() => {
+        if
+		setRandomNumber(...data.imgUrls)
+	}, []);
+*/
     return(
-        <div>
-            <h1>{id}</h1>
+        <div style={{textAlign: "center"}}>
+            <h1>Lets Play {data.name}</h1>
+            <div style={{height: "30px" }}></div>
             <Container>
-                <Row xs={1} sm={1} md={2} lg={3} xl={3} xxl={4}>
+                <Row >
                 <Col key={id}>
-                {card === "" ?  
-                <Image  src='https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/table%20no..png?alt=media&token=b25b160c-b5f7-4583-a7a7-e17538383f71'/>
+                {card === "Start" ?  
+                <Image  src='https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/table%20no..png?alt=media&token=b25b160c-b5f7-4583-a7a7-e17538383f71' fluid/>
                 :
-                null}    
-                {card === undefined && card !== "" ?  
-                <Image  src={"https://cdn.pixabay.com/photo/2020/10/13/07/43/game-5651051_1280.jpg"}/>
+                  <Image src={card} fluid/>}    
+                {!card ?  
+                <Image  src={"https://cdn.pixabay.com/photo/2020/10/13/07/43/game-5651051_1280.jpg"} fluid/>
                 :
-                <Image src={randomNumber}/>}
-                <button onClick={()=>getRandomCard()}>Pick Random Card</button></Col>
+                null}
+                </Col> 
+                </Row>
+                <Row>  
+                    <Col>
+                    <br/>
+                <button onClick={()=>getRandomCard()}>Pick Random Card</button>
+                </Col>       
                 </Row>
             </Container>
-
         </div>
     )
   
