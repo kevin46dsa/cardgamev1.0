@@ -42,8 +42,8 @@ const Home = () => {
                     {games.map((game)=>(
                         <Col>
                         <div>
-                        <Image onClick={()=>{navigate(`/${game.ID}`)}} src={game.DATA.imgUrls[0]}/>
-                        <button onClick={()=>{navigate(`/${game.ID}`)}}>Lets play this!!</button>
+                        <img onClick={()=>{navigate(`/${game.ID}`)}} src={game.DATA.imgUrls[0]} style={{width:"400px"}} />
+                        <button onClick={()=>{navigate(`/${game.ID}`)}}>Lets play {game.DATA.name}!!</button>
                         </div>
                         </Col>
                     ))}

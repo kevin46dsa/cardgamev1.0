@@ -7,12 +7,12 @@ import Image from 'react-bootstrap/esm/Image';
 import { getDocs, collection, doc,getDoc} from "firebase/firestore";
 import { db } from "../../firebase"
 import Game from '../Games/Game';
+import TruthorDare from '../Truthordare/Truthordare';
 
 const MainPlayer = () => {
 
-    const [game, setGame] = useState({})
     let {id} = useParams()
-    let games = []
+    let games = undefined
     useEffect(() => {
 		async function fetchListings() {
 			try {
@@ -22,7 +22,6 @@ const MainPlayer = () => {
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     console.log("Document data:", docSnap.data());
-                    setGame(docSnap.data())
                     games = docSnap.data()
                   } else {
                     // docSnap.data() will be undefined in this case
@@ -38,7 +37,8 @@ const MainPlayer = () => {
 
     return(
         <div>
-            <Game data={games}/>
+            {id === 'TruthorDare' ? <TruthorDare data={games}/> :<Game data={games}/>}
+            
         </div>
     )
   
