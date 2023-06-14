@@ -1,10 +1,10 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState} from 'react';
 import {useParams } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col  from "react-bootstrap/Col";
 import Image from 'react-bootstrap/Image'
-import { Game1 } from '../../Games';
+//import { Game1 } from '../../Games';
 import "./Game.css"
 const Game = ({data}) => {
     let { id } = useParams();
@@ -30,7 +30,7 @@ const Game = ({data}) => {
 */
     return(
         <div style={{textAlign: "center"}}>
-            <h1>Lets Play {data.name}</h1>
+            <h1>Lets Play {data}</h1>
             <div style={{height: "30px" }}></div>
             <Container>
                 <Row >

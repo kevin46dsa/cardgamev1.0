@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col  from "react-bootstrap/Col";
-import Image from 'react-bootstrap/esm/Image';
+//import Image from 'react-bootstrap/esm/Image';
 import { getDocs, collection} from "firebase/firestore";
 import { db } from "../../firebase"
 
@@ -39,10 +39,10 @@ const Home = () => {
             <h1>Pick a game</h1>
             <Container>
                 <Row>
-                    {games.map((game)=>(
-                        <Col>
-                        <div>
-                        <img onClick={()=>{navigate(`/${game.ID}`)}} src={game.DATA.imgUrls[0]} style={{width:"400px"}} />
+                    {games.map((game,index)=>(
+                        <Col key={index}>
+                        <div >
+                        <img alt="Game Cover" onClick={()=>{navigate(`/${game.ID}`)}} src={game.DATA.imgUrls[0]} style={{width:"400px"}} />
                         <button onClick={()=>{navigate(`/${game.ID}`)}}>Lets play {game.DATA.name}!!</button>
                         </div>
                         </Col>

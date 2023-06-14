@@ -1,5 +1,5 @@
 import React, { useState , useEffect } from 'react';
-import { getDocs, collection, doc,getDoc} from "firebase/firestore";
+import { doc,getDoc} from "firebase/firestore";
 import { db } from "../../firebase"
 
 function TruthorDare({data})  {
@@ -48,7 +48,7 @@ function TruthorDare({data})  {
           <button onClick={() => handleTruthClick(Truth)}>Truth</button>
           <button onClick={() => handleDareClick(Dare)}>Dare</button>
         </div>
-        <style jsx>{`
+        <style >{`
           .truthor-dare-container {
             display: flex;
             flex-direction: column;
