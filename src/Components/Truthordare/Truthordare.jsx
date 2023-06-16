@@ -48,7 +48,7 @@ function TruthorDare({data})  {
         <h1>Truth or Dare</h1>
         <br/>
         <br/>
-        {message && <p>{message}</p>}
+        {message && <p style={{textAlign: "center"}}>{message}</p>}
         <div className="button-container">
           <button onClick={() => handleTruthClick(Truth)}>Truth</button>
           <button onClick={() => handleDareClick(Dare)}>Dare</button>

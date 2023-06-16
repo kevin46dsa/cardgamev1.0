@@ -6,6 +6,7 @@ import { db } from "../../firebase"
 import Game from '../Games/Game';
 import TruthorDare from '../Truthordare/Truthordare';
 import NeverHave from '../NeverHave/NeverHave';
+import ChatGPT from '../ChatGPT/ChatGPT';
 
 const MainPlayer = () => {
     
@@ -36,9 +37,18 @@ const MainPlayer = () => {
 
 
     return(
-        <div>
-            {id === 'TruthorDare' ? <TruthorDare /> : id === "Neverhaveiever" ? <NeverHave/> :<Game data={dataRef.current}/>}
-            
+        <div style={{padding: "50px"}}> 
+            {(() =>{
+                switch (id) {
+                    case 'TruthorDare':
+                        return (<TruthorDare />)
+                    case "Neverhaveiever":
+                        return (<NeverHave/>)
+                    case "ChatGPT":
+                        return (<ChatGPT/>)
+                    default:
+                        return (<Game data={dataRef.current}/>)
+            }})()}
         </div>
     )
   

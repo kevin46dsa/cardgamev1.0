@@ -41,7 +41,7 @@ function NeverHave({data})  {
         <h1>Never Have I Ever</h1>
         <br/>
         <br/>
-        {message && <p>{message}</p>}
+        {message && <p style={{textAlign: "center"}}>{message}</p>}
         <div className="button-container">
           <button onClick={() => handleNeverClick(Never)}>Generate</button>
         </div>
