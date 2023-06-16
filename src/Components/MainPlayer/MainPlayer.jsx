@@ -5,6 +5,7 @@ import {  doc,getDoc} from "firebase/firestore";
 import { db } from "../../firebase"
 import Game from '../Games/Game';
 import TruthorDare from '../Truthordare/Truthordare';
+import NeverHave from '../NeverHave/NeverHave';
 
 const MainPlayer = () => {
     
@@ -36,7 +37,7 @@ const MainPlayer = () => {
 
     return(
         <div>
-            {id === 'TruthorDare' ? <TruthorDare /> :<Game data={dataRef.current}/>}
+            {id === 'TruthorDare' ? <TruthorDare /> : id === "Neverhaveiever" ? <NeverHave/> :<Game data={dataRef.current}/>}
             
         </div>
     )

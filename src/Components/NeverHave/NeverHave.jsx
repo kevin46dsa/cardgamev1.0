@@ -2,29 +2,21 @@ import React, { useState , useEffect } from 'react';
 import { doc,getDoc} from "firebase/firestore";
 import { db } from "../../firebase"
 
-function TruthorDare({data})  {
+function NeverHave({data})  {
     const [message, setMessage] = useState('');
-    const [Truth, setTruth] = useState([]);
-    const [Dare, setDare] = useState([]);
-    
-      
-      const handleDareClick = (dareMessages) => {
-       
-        const randomDare = dareMessages[Math.floor(Math.random() * dareMessages.length)];
-        setMessage(randomDare);
-      };
+    const [Never, setNever] = useState([]);
+
       
       useEffect(() => {
 		async function fetchListings() {
 			try {
 				// execute the query
                 
-                const docRef =  doc(db, "game", "TruthorDare");
+                const docRef =  doc(db, "game", "Neverhaveiever");
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     let Data = docSnap.data()
-                    setTruth(Data.truth)
-                    setDare(Data.Dare)
+                    setNever(Data.Questions)
                   } else {
                     // docSnap.data() will be undefined in this case
                     console.log("No such document!");
@@ -36,22 +28,22 @@ function TruthorDare({data})  {
 		fetchListings();
 	}, []);
 
-    const handleTruthClick = (truthMessages) => {
+    const handleNeverClick = (truthMessages) => {
          const randomTruth = truthMessages[Math.floor(Math.random() * truthMessages.length)];
          setMessage(randomTruth);
        };
+
     return (
         <div className="truthor-dare-container">
         <br/>
         <br/>
         <br/>
-        <h1>Truth or Dare</h1>
+        <h1>Never Have I Ever</h1>
         <br/>
         <br/>
         {message && <p>{message}</p>}
         <div className="button-container">
-          <button onClick={() => handleTruthClick(Truth)}>Truth</button>
-          <button onClick={() => handleDareClick(Dare)}>Dare</button>
+          <button onClick={() => handleNeverClick(Never)}>Generate</button>
         </div>
         <style >{`
           .truthor-dare-container {
@@ -92,4 +84,4 @@ function TruthorDare({data})  {
       );
     };
     
-export default TruthorDare;
+export default NeverHave;

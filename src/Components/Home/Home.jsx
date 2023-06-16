@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col  from "react-bootstrap/Col";
+
 //import Image from 'react-bootstrap/esm/Image';
 import { getDocs, collection} from "firebase/firestore";
 import { db } from "../../firebase"
@@ -36,21 +37,65 @@ const Home = () => {
 	}, []);
     return(
         <div>
-            <h1>Pick a game</h1>
+            <br/>
+            <br/>
+            <br/>
+            
+            <h1 style={{textAlign: "center"}}>Pick a game</h1>
+            <br/>
+            <br/>
             <Container>
                 <Row>
                     {games.map((game,index)=>(
                         <Col key={index}>
                         <div >
+
                         <img alt="Game Cover" onClick={()=>{navigate(`/${game.ID}`)}} src={game.DATA.imgUrls[0]} style={{width:"400px"}} />
-                        <button onClick={()=>{navigate(`/${game.ID}`)}}>Lets play {game.DATA.name}!!</button>
+                        <button style={{textAlign: "center"}} onClick={()=>{navigate(`/${game.ID}`)}}>Lets play {game.DATA.name}!!</button>
+                        <br/>
+                        <br/>
                         </div>
                         </Col>
+                        
                     ))}
                 
                 </Row>
             </Container>
-
+            <style >{`
+          .truthor-dare-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+  
+          .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+          }
+  
+          button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+  
+          @media (max-width: 480px) {
+            h1 {
+              font-size: 24px;
+            }
+  
+            button {
+              font-size: 16px;
+              padding: 8px 16px;
+            }
+          }
+        `}</style>
         </div>
     )
   
