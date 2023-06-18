@@ -1,55 +1,84 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect } from 'react';
 import {useParams } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
+import { doc,getDoc} from "firebase/firestore";
+import { db } from "../../firebase"
 import Row from 'react-bootstrap/Row';
 import Col  from "react-bootstrap/Col";
-import Image from 'react-bootstrap/Image'
+//import Image from 'react-bootstrap/Image'
+import { Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 //import { Game1 } from '../../Games';
 import "./Game.css"
-const Game = ({data}) => {
+const Game = () => {
     let { id } = useParams();
-    console.log(data)
-    const [randomNumber, setRandomNumber] = useState([])
-    const [card, setCard] = useState("Start")
+    const [newCard, setNewCard] = useState("")
+    const [card, setCard] = useState([])
+    const [Data, setData] = useState([])
 
-
-    function getRandomCard(){
-        
-        console.log("randomcardPicked")
-        console.log(randomNumber)
-        let item = randomNumber[Math.floor(Math.random()*randomNumber.length)];
-        console.log(item)
-        setCard(item)
-        setRandomNumber(randomNumber.filter((e)=>(e !== item)))
+    function getRandomCard(allCards){
+            console.log(allCards)
+            if(allCards.length === 0) setNewCard('https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/For%20playing.png?alt=media&token=3b339ad5-8d8d-49f9-bc7b-8004c84502d0')
+            else{
+                const randomCard = allCards[Math.floor(Math.random() * allCards.length)];
+                let index = allCards.indexOf(randomCard)
+                allCards.splice(index, 1);
+                setNewCard(randomCard);
+            }
+            
     }
-    /*
-    useEffect(() => {
-        if
-		setRandomNumber(...data.imgUrls)
-	}, []);
-*/
+    
+
+useEffect(() => {
+    async function fetchListings() {
+        try {
+            // execute the query
+            
+            const docRef =  doc(db, "game", id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const gameData = docSnap.data()
+                console.log(gameData)
+                setCard(gameData.Cards)
+                setData(gameData)
+                //setNewCard("https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/kevin%20dsa-dd337f33eb3eaf4215b033c33f0da0fc-uncropped_scaled_within_1536_1152.webp?alt=media&token=1d710eca-bbfc-499e-b81e-f2a4f3ab1b9a");
+              } else {
+                // docSnap.data() will be undefined in this case
+                console.log("No such document!");
+              }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    fetchListings();
+}, [id]);
+
+
+
+
     return(
         <div style={{textAlign: "center"}}>
-            <h1>Lets Play {data}</h1>
+            <h1>Lets Play {Data.name}</h1>
             <div style={{height: "30px" }}></div>
             <Container>
                 <Row >
                 <Col key={id}>
-                {card === "Start" ?  
-                <Image  src='https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/table%20no..png?alt=media&token=b25b160c-b5f7-4583-a7a7-e17538383f71' fluid/>
+               
+                <Card >
+
+                {newCard === ""?  
+                <Card.Img src='https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/kevin%20dsa-dd337f33eb3eaf4215b033c33f0da0fc-uncropped_scaled_within_1536_1152.webp?alt=media&token=1d710eca-bbfc-499e-b81e-f2a4f3ab1b9a' />
                 :
-                  <Image src={card} fluid/>}    
-                {!card ?  
-                <Image  src={"https://cdn.pixabay.com/photo/2020/10/13/07/43/game-5651051_1280.jpg"} fluid/>
-                :
-                null}
+                <Card.Img src={newCard} key={newCard}/>
+                }
+                
+                
+                <Card.Body>
+                <Button onClick={()=>getRandomCard(card)}>Pick Random Card</Button>
+                </Card.Body>
+                </Card>
+               
                 </Col> 
-                </Row>
-                <Row>  
-                    <Col>
-                    <br/>
-                <button onClick={()=>getRandomCard()}>Pick Random Card</button>
-                </Col>       
                 </Row>
             </Container>
         </div>
