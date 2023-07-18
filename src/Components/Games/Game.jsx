@@ -5,9 +5,9 @@ import { doc,getDoc} from "firebase/firestore";
 import { db } from "../../firebase"
 import Row from 'react-bootstrap/Row';
 import Col  from "react-bootstrap/Col";
-//import Image from 'react-bootstrap/Image'
+import Image from 'react-bootstrap/Image'
 import { Button } from 'react-bootstrap';
-import { Card } from 'react-bootstrap';
+import { Card, Modal } from 'react-bootstrap';
 //import { Game1 } from '../../Games';
 import "./Game.css"
 const Game = () => {
@@ -15,6 +15,7 @@ const Game = () => {
     const [newCard, setNewCard] = useState("")
     const [card, setCard] = useState([])
     const [Data, setData] = useState([])
+    const [displayRules, setDisplayRules] = useState(false)
     
 
     function getRandomCard(allCards){
@@ -29,6 +30,10 @@ const Game = () => {
             
     }
     
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
 useEffect(() => {
     async function fetchListings() {
@@ -42,6 +47,7 @@ useEffect(() => {
                 console.log(gameData)
                 setCard(gameData.Cards)
                 setData(gameData)
+                if(gameData.rules.length !== 0) setDisplayRules(true)
                 //setNewCard("https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/kevin%20dsa-dd337f33eb3eaf4215b033c33f0da0fc-uncropped_scaled_within_1536_1152.webp?alt=media&token=1d710eca-bbfc-499e-b81e-f2a4f3ab1b9a");
               } else {
                 // docSnap.data() will be undefined in this case
@@ -70,6 +76,25 @@ switch(id) {
     return(
         <div style={{textAlign: "center"}}>
             <h1>Lets Play {Data.name}</h1>
+            {displayRules ? <Button onClick={handleShow}>Rules</Button>: null}
+            
+            <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{Data.name} Rules</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <Image
+            className="d-block w-100"
+            src={Data.rules}
+            alt='Rules'/>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
             <div style={{height: "30px" }}></div>
             <Container>
                 <Row >
