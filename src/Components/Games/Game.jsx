@@ -15,9 +15,10 @@ const Game = () => {
     const [newCard, setNewCard] = useState("")
     const [card, setCard] = useState([])
     const [Data, setData] = useState([])
+    
 
     function getRandomCard(allCards){
-            console.log(allCards)
+            
             if(allCards.length === 0) setNewCard('https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/For%20playing.png?alt=media&token=3b339ad5-8d8d-49f9-bc7b-8004c84502d0')
             else{
                 const randomCard = allCards[Math.floor(Math.random() * allCards.length)];
@@ -52,7 +53,17 @@ useEffect(() => {
     }
     fetchListings();
 }, [id]);
-
+let startCard = undefined
+switch(id) {
+    case '6vfbnEVnnoheLfGLABKk':
+        startCard = "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/Cover.%20ylyl.png?alt=media&token=8b98d9a7-f8c0-4ae7-b1b3-a17b4e14afbe"
+      break;
+    case 'Addgameid':
+        startCard = "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/Cover.%20ylyl.png?alt=media&token=8b98d9a7-f8c0-4ae7-b1b3-a17b4e14afbe"
+      break;
+    default:
+      console.log("Default")
+  }
 
 
 
@@ -67,7 +78,7 @@ useEffect(() => {
                 <Card >
 
                 {newCard === ""?  
-                <Card.Img src='https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/kevin%20dsa-dd337f33eb3eaf4215b033c33f0da0fc-uncropped_scaled_within_1536_1152.webp?alt=media&token=1d710eca-bbfc-499e-b81e-f2a4f3ab1b9a' />
+                <Card.Img src={startCard} />
                 :
                 <Card.Img src={newCard} key={newCard}/>
                 }

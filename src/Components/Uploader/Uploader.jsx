@@ -91,16 +91,16 @@ import {
       });
     }
 
-    const imgUrls = await Promise.all(
+    const Cards = await Promise.all(
       [...images].map((image) => storeImage(image))
     ).catch((error) => {
       alert("Images not uploaded");
       return;
     });
-
+    console.log(Cards)
     const formDataCopy = {
       ...formData,
-      imgUrls,
+      Cards,
       timestamp: serverTimestamp(),
     };
     delete formDataCopy.images;
