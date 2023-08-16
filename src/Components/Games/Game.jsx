@@ -64,9 +64,12 @@ switch(id) {
     case '6vfbnEVnnoheLfGLABKk':
         startCard = "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/Cover.%20ylyl.png?alt=media&token=8b98d9a7-f8c0-4ae7-b1b3-a17b4e14afbe"
       break;
+    case 'NSrETKaJwGjZVSdejuMf':
+        startCard = "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/Screenshot%202023-08-07%20at%2011.59.46%20PM.png?alt=media&token=16206bf9-9138-4aac-9c2b-b109509a3822"
+      break;
     case 'Addgameid':
         startCard = "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/Cover.%20ylyl.png?alt=media&token=8b98d9a7-f8c0-4ae7-b1b3-a17b4e14afbe"
-      break;
+      break;  
     default:
       console.log("Default")
   }
