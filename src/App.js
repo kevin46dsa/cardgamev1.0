@@ -6,6 +6,7 @@ import Uploader from './Components/Uploader/Uploader';
 import MainPlayer from './Components/MainPlayer/MainPlayer';  
 import UploadMoreImage from './Components/Uploader/UploaderMoreImage';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import BudgetCounter from './Components/BudgetCounter/BudgetCounter';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/:id" element={<MainPlayer/>}/>
                 <Route path="/uploader/:id" element={<Uploader/>}/>
                 <Route path="/uploadermore/:id" element={<UploadMoreImage/>}/>
+                <Route path="/budgetcounter/:id" element={<BudgetCounter/>}/>
               </Routes>
             </div>
         </Router>

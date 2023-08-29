@@ -1,0 +1,15 @@
+div.scroll{
+    margin:auto;
+    padding:10px;
+    background-color: rgb(248, 238, 239);
+    width: 50%;
+    height: 70vh ;
+    overflow: auto;
+    
+}
+
+div.Maindiv{
+    padding: 10%;
+    text-align: center;
+
+}
