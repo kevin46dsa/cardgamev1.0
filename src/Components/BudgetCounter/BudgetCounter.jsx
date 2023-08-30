@@ -25,7 +25,7 @@ function BudgetCounter()  {
         }
         
         const dbRef = doc(db, "Budgetcal", "trans");
-        let updatedamount = parseInt(allowance) - parseInt(amount)
+        let updatedamount = parseFloat(allowance) - parseFloat(amount)
         await updateDoc(dbRef, {History: arrayUnion(newElement),Allowance:updatedamount});
         setallowance(updatedamount)
         setTransHistory((oldArray => [...oldArray, newElement]))
@@ -46,7 +46,7 @@ function BudgetCounter()  {
         }
         
         const dbRef = doc(db, "Budgetcal", "trans");
-        let updatedamount = parseInt(allowance) + parseInt(amount)
+        let updatedamount = parseFloat(allowance) + parseFloat(amount)
         await updateDoc(dbRef, {History: arrayUnion(newElement), Allowance: updatedamount});
         setallowance(updatedamount)
         setTransHistory((oldArray => [...oldArray, newElement]))
