@@ -8,7 +8,6 @@ import Col  from "react-bootstrap/Col";
 import Image from 'react-bootstrap/Image'
 import { Button } from 'react-bootstrap';
 import { Card, Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 
 const Truthordrinkrandomplayer = () => {
     let { id } = useParams();
@@ -21,7 +20,6 @@ const Truthordrinkrandomplayer = () => {
     const [card, setCard] = useState([])
     const [twistAllCards, settwistAllCards] = useState([])
     const [displayRules, setDisplayRules] = useState(false)
-    let navigate = useNavigate()
 
 
     function getRandomCard(allCards,id){
@@ -58,6 +56,14 @@ const Truthordrinkrandomplayer = () => {
             
             
     }
+
+    function Knuthshuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        setCard(array)
+      }
     
     const [show, setShow] = useState(false);
     const [showTwist, setShowTwist] = useState(false);
@@ -77,9 +83,8 @@ const Truthordrinkrandomplayer = () => {
                         allCards = [...allCards, ...DocData.Cards ]
                     }
                 });
-                console.log(allCards)
-                setCard(allCards)
-            
+                Knuthshuffle(allCards)
+                setDisplayRules(true)
 
             const docRef2 =  doc(db, "truthordrink", "twistcards");
             const docSnap2 = await getDoc(docRef2);
@@ -112,7 +117,7 @@ let startCard = "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.app
         <Modal.Body>
         <Image
             className="d-block w-100"
-            src="insert Rules image url"
+            src="https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/Screenshot%202023-09-04%20at%209.20.24%20PM.png?alt=media&token=eef660c3-0869-4186-9f4a-fc07c1fc81fc"
             alt='Rules'/>
 
         </Modal.Body>

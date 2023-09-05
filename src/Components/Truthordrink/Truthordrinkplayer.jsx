@@ -8,7 +8,6 @@ import Col  from "react-bootstrap/Col";
 import Image from 'react-bootstrap/Image'
 import { Button } from 'react-bootstrap';
 import { Card, Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 
 const Truthordrinkplayer = () => {
     let { id } = useParams();
@@ -22,7 +21,7 @@ const Truthordrinkplayer = () => {
     const [twistAllCards, settwistAllCards] = useState([])
     const [Data, setData] = useState([])
     const [displayRules, setDisplayRules] = useState(false)
-    let navigate = useNavigate()
+   
 
 
     function getRandomCard(allCards,id){
