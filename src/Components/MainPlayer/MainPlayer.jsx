@@ -5,6 +5,7 @@ import Game from '../Games/Game';
 import TruthorDare from '../Truthordare/Truthordare';
 import NeverHave from '../NeverHave/NeverHave';
 import ChatGPT from '../ChatGPT/ChatGPT';
+import Truthordrink from '../Truthordrink/Truthordrink';
 
 const MainPlayer = () => {
     
@@ -22,6 +23,8 @@ const MainPlayer = () => {
                         return (<NeverHave/>)
                     case "ChatGPT":
                         return (<ChatGPT/>)
+                    case "truthordrink":
+                        return (<Truthordrink/>)
                     default:
                         return (<Game />)
             }})()}

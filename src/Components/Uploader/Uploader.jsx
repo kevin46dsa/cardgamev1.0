@@ -101,10 +101,12 @@ import {
     const formDataCopy = {
       ...formData,
       Cards,
+      imgUrls:["test"],
+      rules:["test"],
       timestamp: serverTimestamp(),
     };
     delete formDataCopy.images;
-    await addDoc(collection(db, "game"), formDataCopy);
+    await addDoc(collection(db, "truthordrink"), formDataCopy);
     alert("Game Added");
     navigate(`/`);
   }

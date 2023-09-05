@@ -99,7 +99,7 @@ import {
     });
     //console.log(Cards)
    
-    const gameRef = doc(db, "game", formData.name);
+    const gameRef = doc(db, "truthordrink", formData.name);
 
     await updateDoc(gameRef, {Cards: arrayUnion(...Cards)});
     alert("More Cards Added");

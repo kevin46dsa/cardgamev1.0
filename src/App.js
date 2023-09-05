@@ -7,6 +7,8 @@ import MainPlayer from './Components/MainPlayer/MainPlayer';
 import UploadMoreImage from './Components/Uploader/UploaderMoreImage';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import BudgetCounter from './Components/BudgetCounter/BudgetCounter';
+import Truthordrinkplayer from './Components/Truthordrink/Truthordrinkplayer';
+import Truthordrinkrandomplayer from './Components/Truthordrink/Truthordrinkrandom';
 
 function App() {
   return (
@@ -18,6 +20,9 @@ function App() {
                 <Route path="/uploader/:id" element={<Uploader/>}/>
                 <Route path="/uploadermore/:id" element={<UploadMoreImage/>}/>
                 <Route path="/budgetcounter/:id" element={<BudgetCounter/>}/>
+                <Route path="/truthordrinkrandom" element={<Truthordrinkrandomplayer/>}/>
+                <Route path="/truthordrink/:id" element={<Truthordrinkplayer/>}/>
+                
               </Routes>
             </div>
         </Router>
