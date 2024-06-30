@@ -9,6 +9,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import BudgetCounter from './Components/BudgetCounter/BudgetCounter';
 import Truthordrinkplayer from './Components/Truthordrink/Truthordrinkplayer';
 import Truthordrinkrandomplayer from './Components/Truthordrink/Truthordrinkrandom';
+import Update from './Components/Update/Update';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
                 <Route path='/' element={<Home />} />
                 <Route path="/:id" element={<MainPlayer/>}/>
                 <Route path="/uploader/:id" element={<Uploader/>}/>
+                <Route path="/update/:id" element={<Update/>}/>
                 <Route path="/uploadermore/:id" element={<UploadMoreImage/>}/>
                 <Route path="/budgetcounter/:id" element={<BudgetCounter/>}/>
                 <Route path="/truthordrinkrandom" element={<Truthordrinkrandomplayer/>}/>
