@@ -15,7 +15,6 @@ const handleFileUpload = (event) => {
         reader.onload = (e) => {
             let text = e.target.result;
             text = formatData(text);
-            console.log(text)
             setState(text);
             setError('');
         };
@@ -29,18 +28,14 @@ const handleFileUpload = (event) => {
 };
 
 const formatData = (data) => {
-    let formattedData = data.split(',');
-    let finalData = formattedData.map((item,index) => {
-        console.log(item)
-        return item.replace(/"/g, '')
-    })
-    let filteredData = finalData.filter(item => item.trim() !== '' && item.trim() !== '\n');
-    return filteredData;
+    let formattedData = data.split(',').map(item => item.replace(/\n/g, '').trim()) // Remove newline characters and trim whitespace
+    .filter(item => item.length > 0); // Filter out empty strings;
+    console.log(formattedData)
+    return formattedData;
 }
 
   return (
     <>
-    <h2>Upload CSV File</h2>
                 <div>
                     <label htmlFor="csvFile">CSV File</label>
                     <input type="file" id="csvFile" accept=".csv" onChange={handleFileUpload} />
