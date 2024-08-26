@@ -1,10 +1,8 @@
 import React, { useState , useEffect } from 'react';
 import CardDesign from '../CardDesigns/CardDesign';
-import { doc,getDoc} from "firebase/firestore";
-import { db } from "../../firebase"
-import { set } from 'firebase/database';
+import { fetchGame } from '../../Utils/Basic';
 
-function TruthorDare({data})  {
+function TruthorDare()  {
     const [message, setMessage] = useState('');
     const [Truth, setTruth] = useState([]);
     const [Dare, setDare] = useState([]);
@@ -28,17 +26,13 @@ function TruthorDare({data})  {
 		async function fetchListings() {
 			try {
 				// execute the query
-                
-                const docRef =  doc(db, "game", "TruthorDare");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    let Data = docSnap.data()
-                    setTruth(Data.truth)
-                    setDare(Data.Dare)
-                  } else {
-                    // docSnap.data() will be undefined in this case
-                    console.log("No such document!");
-                  }
+
+              const data = await fetchGame("TruthorDare")
+              console.log(data)
+              if (data) {
+                setTruth(data.truth)
+                setDare(data.Dare)
+              }
 			} catch (error) {
 				console.log(error);
 			}

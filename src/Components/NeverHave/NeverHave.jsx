@@ -1,32 +1,27 @@
 import React, { useState , useEffect } from 'react';
 import CardDesign from '../CardDesigns/CardDesign';
-import { doc,getDoc} from "firebase/firestore";
-import { db } from "../../firebase"
+import { fetchGame } from '../../Utils/Basic';
 
-function NeverHave({data})  {
+function NeverHave()  {
     const [message, setMessage] = useState('');
     const [Never, setNever] = useState([]);
     const GameTitle = "Never Have I Ever";
       
-      useEffect(() => {
+  useEffect(() => {
 		async function fetchListings() {
 			try {
 				// execute the query
-                
-                const docRef =  doc(db, "game", "Neverhaveiever");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    let Data = docSnap.data()
-                    setNever(Data.Questions)
-                  } else {
-                    // docSnap.data() will be undefined in this case
-                    console.log("No such document!");
-                  }
+        const data = await fetchGame("Neverhaveiever")
+        console.log(data)
+        if (data.Questions.length > 0) {
+          setNever(data.Questions)
+        }
 			} catch (error) {
 				console.log(error);
 			}
 		}
-		fetchListings();
+    fetchListings();
+
 	}, []);
 
     const handleNeverClick = (truthMessages) => {
@@ -43,9 +38,10 @@ function NeverHave({data})  {
         <br/>
         <br/>
         {message && <CardDesign message={message} title={GameTitle}/>}
-        <div className="button-container">
+        {Never.length > 0 && <div className="button-container">
           <button onClick={() => handleNeverClick(Never)}>Generate</button>
-        </div>
+        </div>}
+        
         <style >{`
           .truthor-dare-container {
             display: flex;
