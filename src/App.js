@@ -9,6 +9,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import BudgetCounter from './Components/BudgetCounter/BudgetCounter';
 import Truthordrinkplayer from './Components/Truthordrink/Truthordrinkplayer';
 import Truthordrinkrandomplayer from './Components/Truthordrink/Truthordrinkrandom';
+import CardDesign from './Components/CardDesigns/CardDesign';
 import Update from './Components/Update/Update';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/budgetcounter/:id" element={<BudgetCounter/>}/>
                 <Route path="/truthordrinkrandom" element={<Truthordrinkrandomplayer/>}/>
                 <Route path="/truthordrink/:id" element={<Truthordrinkplayer/>}/>
+                <Route path="/testDesign" element={<CardDesign message="test"/>} />
                 
               </Routes>
             </div>

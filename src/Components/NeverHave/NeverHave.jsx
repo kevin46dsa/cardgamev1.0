@@ -1,11 +1,12 @@
 import React, { useState , useEffect } from 'react';
+import CardDesign from '../CardDesigns/CardDesign';
 import { doc,getDoc} from "firebase/firestore";
 import { db } from "../../firebase"
 
 function NeverHave({data})  {
     const [message, setMessage] = useState('');
     const [Never, setNever] = useState([]);
-
+    const GameTitle = "Never Have I Ever";
       
       useEffect(() => {
 		async function fetchListings() {
@@ -38,10 +39,10 @@ function NeverHave({data})  {
         <br/>
         <br/>
         <br/>
-        <h1>Never Have I Ever</h1>
+        <h1>{GameTitle}</h1>
         <br/>
         <br/>
-        {message && <p style={{textAlign: "center"}}>{message}</p>}
+        {message && <CardDesign message={message} title={GameTitle}/>}
         <div className="button-container">
           <button onClick={() => handleNeverClick(Never)}>Generate</button>
         </div>

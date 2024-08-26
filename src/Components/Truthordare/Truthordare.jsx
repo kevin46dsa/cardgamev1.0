@@ -1,17 +1,27 @@
 import React, { useState , useEffect } from 'react';
+import CardDesign from '../CardDesigns/CardDesign';
 import { doc,getDoc} from "firebase/firestore";
 import { db } from "../../firebase"
+import { set } from 'firebase/database';
 
 function TruthorDare({data})  {
     const [message, setMessage] = useState('');
     const [Truth, setTruth] = useState([]);
     const [Dare, setDare] = useState([]);
-    
+    const [title,setTitle] = useState("")
+    const GameTitle = "Truth or Dare";
       
       const handleDareClick = (dareMessages) => {
        
         const randomDare = dareMessages[Math.floor(Math.random() * dareMessages.length)];
         setMessage(randomDare);
+        setTitle("Dare")
+      };
+
+      const handleTruthClick = (truthMessages) => {
+        const randomTruth = truthMessages[Math.floor(Math.random() * truthMessages.length)];
+        setMessage(randomTruth);
+        setTitle("Truth")
       };
       
       useEffect(() => {
@@ -36,19 +46,16 @@ function TruthorDare({data})  {
 		fetchListings();
 	}, []);
 
-    const handleTruthClick = (truthMessages) => {
-         const randomTruth = truthMessages[Math.floor(Math.random() * truthMessages.length)];
-         setMessage(randomTruth);
-       };
+
     return (
         <div className="truthor-dare-container">
         <br/>
         <br/>
         <br/>
-        <h1>Truth or Dare</h1>
+        <h1>{GameTitle}</h1>
         <br/>
         <br/>
-        {message && <p style={{textAlign: "center"}}>{message}</p>}
+        {message && <CardDesign message={message} title={title}/>}
         <div className="button-container">
           <button onClick={() => handleTruthClick(Truth)}>Truth</button>
           <button onClick={() => handleDareClick(Dare)}>Dare</button>
