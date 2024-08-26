@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
-import { setDoc, collection,serverTimestamp, doc } from "firebase/firestore";
+import { setDoc,serverTimestamp, doc } from "firebase/firestore";
 import { storeImage,onChangeFormDataHandler } from '../../Utils/Basic';
 import { db } from '../../firebase';
 
@@ -57,6 +57,7 @@ const CreateNewGame = () => {
         const formDataCopy = {
           ...formData,
           name,
+          cards: Cards || [],
           imgUrls: [thumbnailUrl],
           rules:["Insert Image URL of rules"],
           timestamp: serverTimestamp(),
@@ -74,10 +75,10 @@ const CreateNewGame = () => {
 
   return (
     <>
-    <div>CreateNewGame</div>
+    <h1>CreateNewGame</h1>
     <Form onSubmit={onSubmit}>
-           
-           <p >Name of the Game</p>
+    <div>
+    <label htmlFor="name" className="form-label">Enter the name of the game</label>
            <input
              type="text"
              id="name"
@@ -89,8 +90,8 @@ const CreateNewGame = () => {
              required
              className="form-control"
            />
-           <div>
-             <label htmlFor="formFileMultiple" className="form-label">Upload Images</label>
+           
+             <label htmlFor="thumbnail" className="form-label">Upload Thumbnail</label>
              <input
                type="file"
                id="thumbnail"
@@ -103,9 +104,10 @@ const CreateNewGame = () => {
                required
                className="form-control"
              />
-           </div>
-           <div>
-             <label htmlFor="formFileMultiple" className="form-label">Upload Images</label>
+      </div>
+      
+         
+             <label htmlFor="cards" className="form-label">Upload Cards</label>
              <input
                type="file"
                id="cards"
@@ -118,7 +120,7 @@ const CreateNewGame = () => {
                multiple
                className="form-control"
              />
-           </div>
+           
            <br/>
            <button
              type="submit"
