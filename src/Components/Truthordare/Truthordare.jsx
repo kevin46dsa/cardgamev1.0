@@ -28,7 +28,6 @@ function TruthorDare()  {
 				// execute the query
 
               const data = await fetchGame("TruthorDare")
-              console.log(data)
               if (data) {
                 setTruth(data.truth)
                 setDare(data.Dare)

@@ -55,8 +55,6 @@ const Home = () => {
                         <Card.Body style={{textAlign: "center"}}>
                         <Button size='lg' onClick={()=>{navigate(`/${game.ID}`)}}>Lets play {game.DATA.name}!!</Button>
                         </Card.Body>
-                        
-                        
                         </Card>
                         </Col>
                         

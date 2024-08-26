@@ -15,6 +15,7 @@ import {
   const Uploader = () => {
     let { id } = useParams();
     const navigate = useNavigate();
+    
   const [formData, setFormData] = useState({
     name: "",
     images: {},
@@ -23,6 +24,8 @@ import {
     name,
     images,
   } = formData;
+
+
   function onChange(e) {
     let boolean = null;
     if (e.target.value === "true") {
@@ -110,6 +113,8 @@ import {
     alert("Game Added");
     navigate(`/`);
   }
+
+
 if(id === 'kevin46dsa'){
 	return (
         <div>

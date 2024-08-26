@@ -12,7 +12,6 @@ function NeverHave()  {
 			try {
 				// execute the query
         const data = await fetchGame("Neverhaveiever")
-        console.log(data)
         if (data.Questions.length > 0) {
           setNever(data.Questions)
         }
@@ -39,6 +38,7 @@ function NeverHave()  {
         <br/>
         {message && <CardDesign message={message} title={GameTitle}/>}
         {Never.length > 0 && <div className="button-container">
+  
           <button onClick={() => handleNeverClick(Never)}>Generate</button>
         </div>}
         

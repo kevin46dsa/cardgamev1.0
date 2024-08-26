@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams} from 'react-router-dom';
-
+import { GameIDs } from '../../Utils/enums';
 import Game from '../Games/Game';
 import TruthorDare from '../Truthordare/Truthordare';
 import NeverHave from '../NeverHave/NeverHave';
@@ -17,13 +17,13 @@ const MainPlayer = () => {
         <div style={{padding: "50px"}}> 
             {(() =>{
                 switch (id) {
-                    case 'TruthorDare':
+                    case GameIDs.TruthorDare:
                         return (<TruthorDare />)
-                    case "Neverhaveiever":
+                    case GameIDs.Neverhaveiever:
                         return (<NeverHave/>)
-                    case "ChatGPT":
+                    case GameIDs.ChatGPT:
                         return (<ChatGPT/>)
-                    case "truthordrink":
+                    case GameIDs.truthordrink:
                         return (<Truthordrink/>)
                     default:
                         return (<Game />)
