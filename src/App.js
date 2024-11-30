@@ -8,6 +8,7 @@ import BudgetCounter from './Components/BudgetCounter/BudgetCounter';
 import Truthordrinkplayer from './Components/Truthordrink/Truthordrinkplayer';
 import Truthordrinkrandomplayer from './Components/Truthordrink/Truthordrinkrandom';
 import UpdateMenu from './Components/UpdateMenu/UpdateMenu';
+import GenerateFolder from './Components/GenerateFolder/GenerateFolder';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/budgetcounter/:id" element={<BudgetCounter/>}/>
                 <Route path="/truthordrinkrandom" element={<Truthordrinkrandomplayer/>}/>
                 <Route path="/truthordrink/:id" element={<Truthordrinkplayer/>}/>
+                <Route path="/extra/generatefolder" element={<GenerateFolder />} />
               </Routes>
             </div>
         </Router>
