@@ -5,7 +5,6 @@ import { Modal } from "react-bootstrap";
 
 const PlayerCard = (props) => {
   const { name, word } = props;
-  console.log(name, word);
   const [show, setShow] = useState(false);
   const onClose = () => setShow(false);
   return (
