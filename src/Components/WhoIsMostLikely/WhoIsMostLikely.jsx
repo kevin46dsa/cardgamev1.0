@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import CardDesign from "../CardDesigns/CardDesign";
-import { GameTitles } from "../../Utils/enums";
+import { GameTitles, GameIDs } from "../../Utils/enums";
 import { fetchGame } from "../../Utils/Basic";
 
-function NeverHave() {
+function WhoIsMostLikely() {
   const [message, setMessage] = useState("");
-  const [Never, setNever] = useState([]);
-  const GameTitle = GameTitles.Neverhaveiever;
+  const [questionState, setQuestions] = useState([]);
+  const GameTitle = GameTitles.WhoIsMostLikely;
 
   useEffect(() => {
     async function fetchListings() {
       try {
         // execute the query
-        const data = await fetchGame("Neverhaveiever");
+        const data = await fetchGame(GameIDs.WhoIsMostLikely);
         if (data.Questions.length > 0) {
-          setNever(data.Questions);
+          setQuestions(data.Questions);
         }
       } catch (error) {
         console.log(error);
@@ -23,11 +23,11 @@ function NeverHave() {
     fetchListings();
   }, []);
 
-  const handleNeverClick = (truthMessages) => {
+  const handleGenerateNewCard = useCallback(() => {
     const randomTruth =
-      truthMessages[Math.floor(Math.random() * truthMessages.length)];
+      questionState[Math.floor(Math.random() * questionState.length)];
     setMessage(randomTruth);
-  };
+  }, [questionState]);
 
   return (
     <div className="truthor-dare-container">
@@ -38,9 +38,9 @@ function NeverHave() {
       <br />
       <br />
       {message && <CardDesign message={message} title={GameTitle} />}
-      {Never.length > 0 && (
+      {questionState.length > 0 && (
         <div className="button-container">
-          <button onClick={() => handleNeverClick(Never)}>Generate</button>
+          <button onClick={() => handleGenerateNewCard()}>Generate</button>
         </div>
       )}
 
@@ -83,4 +83,4 @@ function NeverHave() {
   );
 }
 
-export default NeverHave;
+export default WhoIsMostLikely;
