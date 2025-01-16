@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { onSnapshot, doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 
 import {
-  fetchGameData,
+  // fetchGameData,
   createGameSchema,
   resetGameData,
   updatePlayerGameData,
@@ -15,10 +15,12 @@ export function useMrWhite() {
   const [startGame, setStartGame] = useState(false);
   const [gameData, setGameData] = useState(null);
   const docRef = doc(db, "MrWhite", GameID);
+  /*
   const unsub = onSnapshot(docRef, (doc) => {
     // console.log("Setting new data");
     // setGameData(doc.data());
   });
+  */
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +34,7 @@ export function useMrWhite() {
       }
     };
     fetchData();
-  }, []);
+  }, [docRef]);
 
   // First we need to get the number of players from the user
 
