@@ -20,10 +20,12 @@ const votingTable = {
   votes: [],
 };
 
+/*
 const votingTemplate = {
   vote: true,
   playerIndex: 0,
 };
+*/
 
 /**
  * This method creates the schema for the Player object
