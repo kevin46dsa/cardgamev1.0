@@ -6,22 +6,22 @@ import { GameTitles } from "../../Utils/enums";
 function Sudoku() {
   const [sudokuGameData, setSudokuGameData] = useState<any>(null);
   const fetchSudokuGameData = useCallback(async (difficulty = "easy") => {
-    try {
-      const res = await fetch("/sudoku-api/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          difficulty, // "easy" | "medium" | "hard"
-          solution: true,
-          array: false,
-        }),
+    fetch("https://youdosudoku.com/api/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        difficulty, // "easy", "medium", or "hard" (defaults to "easy")
+        solution: true, // true or false (defaults to true)
+        array: false,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSudokuGameData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching Sudoku game data:", error);
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      setSudokuGameData(data);
-    } catch (err) {
-      console.error("Error fetching Sudoku game data:", err);
-    }
   }, []);
 
   return (
