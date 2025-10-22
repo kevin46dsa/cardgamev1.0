@@ -7,6 +7,7 @@ import NeverHave from "../NeverHave/NeverHave";
 import ChatGPT from "../ChatGPT/ChatGPT";
 import Truthordrink from "../Truthordrink/Truthordrink";
 import MrWhite from "../MrWhite/MrWhite";
+import Sudoku from "../Sudoku/Sudoku";
 import WhoIsMostLikely from "../WhoIsMostLikely/WhoIsMostLikely";
 
 const MainPlayer = () => {
@@ -22,6 +23,8 @@ const MainPlayer = () => {
             return <NeverHave />;
           case GameIDs.ChatGPT:
             return <ChatGPT />;
+          case GameIDs.sudoku:
+            return <Sudoku />;
           case GameIDs.truthordrink:
             return <Truthordrink />;
           case GameIDs.MrWhite:

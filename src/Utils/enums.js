@@ -5,6 +5,8 @@ export const GameIDs = {
   truthordrink: "truthordrink",
   MrWhite: "MrWhite",
   WhoIsMostLikely: "WhoIsMostLikely",
+  sudoku: "sudoku",
+  youLaughYouLose: "6vfbnEVnnoheLfGLABKk",
 };
 
 export const GameTitles = {
@@ -14,4 +16,6 @@ export const GameTitles = {
   truthordrink: "Truth or Drink",
   MrWhite: "Mr. White",
   WhoIsMostLikely: "Who's Most Likely To...",
+  sudoku: "Sudoku",
+  youLaughYouLose: "You Laugh You Lose",
 };
