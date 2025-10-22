@@ -5,19 +5,21 @@ import { GameTitles } from "../../Utils/enums";
 
 function Sudoku() {
   const [sudokuGameData, setSudokuGameData] = useState<any>(null);
-  const fetchSudokuGameData = useCallback(async (difficulty = "easy") => {
-    fetch("https://youdosudoku.com/api/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        difficulty, // "easy", "medium", or "hard" (defaults to "easy")
-        solution: true, // true or false (defaults to true)
-        array: false,
-      }),
-    })
+  const [sudokuGameSolution, setSudokuGameSolution] = useState<any>(null);
+  const [sudokuGameDifficulty, setSudokuGameDifficulty] = useState<any>(null);
+  const fetchSudokuGameData = useCallback(async () => {
+    fetch(
+      "https://sudoku-api.vercel.app/api/dosuku?query={newboard(limit:1){grids{value,solution,difficulty},results,message}}",
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
-        setSudokuGameData(data);
+        setSudokuGameData(data.newboard.grids[0].value);
+        setSudokuGameSolution(data.newboard.grids[0].solution);
+        setSudokuGameDifficulty(data.newboard.grids[0].difficulty);
       })
       .catch((error) => {
         console.error("Error fetching Sudoku game data:", error);
@@ -32,10 +34,16 @@ function Sudoku() {
       <h1>{GameTitles.sudoku}</h1>
       <br />
       <br />
-      {!sudokuGameData && (
-        <SudokuGameMenu getSudokuGameData={fetchSudokuGameData} />
+
+      <SudokuGameMenu getSudokuGameData={fetchSudokuGameData} />
+
+      {sudokuGameData && (
+        <SudokuBoard
+          sudokuGameData={sudokuGameData}
+          sudokuGameSolution={sudokuGameSolution}
+          sudokuGameDifficulty={sudokuGameDifficulty}
+        />
       )}
-      {sudokuGameData && <SudokuBoard sudokuGameData={sudokuGameData} />}
     </div>
   );
 }
