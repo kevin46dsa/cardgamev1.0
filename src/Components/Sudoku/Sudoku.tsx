@@ -35,10 +35,6 @@ function Sudoku() {
       <br />
       <br />
       <br />
-      <h1>{GameTitles.sudoku}</h1>
-      <br />
-      <br />
-
       <SudokuGameMenu getSudokuGameData={fetchSudokuGameData} />
 
       {sudokuGameData && (
