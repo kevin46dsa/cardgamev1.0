@@ -126,6 +126,7 @@
 .sudoku-option-button {
   appearance: none;
   border: 0;
+  width: 50px;
   border-radius: 12px;
   min-height: 44px; /* touch target */
   font-size: 1.05rem;
