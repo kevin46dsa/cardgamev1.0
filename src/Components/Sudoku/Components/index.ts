@@ -1,2 +1,2 @@
-export * from "./SudokuGameMenu";
+export * from "./SudokuGameMenu/SudokuGameMenu";
 export * from "./SudokuBoard/SudokuBoard";

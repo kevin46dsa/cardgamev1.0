@@ -1,8 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { SudokuGameMenu, SudokuBoard } from "./Components";
 
-import { GameTitles } from "../../Utils/enums";
-
 function Sudoku() {
   const [sudokuGameData, setSudokuGameData] = useState<number[][] | null>(null);
   const [sudokuGameSolution, setSudokuGameSolution] = useState<

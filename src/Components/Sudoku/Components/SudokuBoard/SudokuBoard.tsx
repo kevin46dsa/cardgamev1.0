@@ -16,8 +16,6 @@ export function SudokuBoard(props: SudokuBoardProps) {
 
   return (
     <div className="sudoku-board-container">
-      <h2>🧩 Sudoku</h2>
-
       <div className="meta">
         {!GameOverScreen && (
           <>

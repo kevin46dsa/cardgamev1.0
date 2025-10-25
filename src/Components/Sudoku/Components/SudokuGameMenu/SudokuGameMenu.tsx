@@ -1,4 +1,5 @@
 import { Button } from "react-bootstrap";
+import "./SudokuGameMenuStyles.css";
 
 export function SudokuGameMenu(props: { getSudokuGameData: any }) {
   const { getSudokuGameData } = props;
@@ -9,7 +10,7 @@ export function SudokuGameMenu(props: { getSudokuGameData: any }) {
 
   return (
     <div className="sudoku-game-menu-container">
-      <div>Sudoku Game Menu</div>
+      <h2>🧩 Sudoku</h2>
       <Button onClick={() => handleDifficultyChange()}>Generate Board</Button>
     </div>
   );
