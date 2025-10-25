@@ -13,8 +13,8 @@
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 8px;
-  font-size: 0.95rem;
+  gap: 10px;
+  font-size: 1.5rem;
 }
 
 .sudoku-board-main {
@@ -23,7 +23,19 @@
   grid-template-rows: repeat(9, 1fr);
   gap: 2px;
   width: 100%;
-  aspect-ratio: 1 / 1; /* keep a square board */
+  aspect-ratio: 1.1 / 1.25; /* keep a square board */
+}
+
+.sudoku-option-button {
+  width: 35px;
+}
+
+.sudoku-board-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+  justify-content: center;
+  padding: 10px 0;
 }
 
 .sudoku-cell {
