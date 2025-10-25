@@ -1,7 +1,7 @@
 export interface SudokuBoardProps {
-  sudokuGameData: number[][]; // 9x9 grid of numbers (use 0 or null for blanks)
+  sudokuGameData: number[][]; // 9x9 grid; use 0 for blanks
   sudokuGameSolution: number[][] | null; // 9x9 or null
-  sudokuGameDifficulty: string | null; // e.g., "easy" | "medium" | "hard" | null
+  sudokuGameDifficulty: string | null; // "easy" | "medium" | "hard" | null
 }
 
 export type Cell = {
@@ -11,4 +11,5 @@ export type Cell = {
   cellColor: string;
   textColor?: string;
   isSelected: boolean;
+  isGiven: boolean; // NEW: prefilled cell
 };

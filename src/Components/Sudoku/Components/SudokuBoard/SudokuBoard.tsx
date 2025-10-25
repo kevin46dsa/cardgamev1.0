@@ -16,32 +16,44 @@ export function SudokuBoard(props: SudokuBoardProps) {
 
   return (
     <div className="sudoku-board-container">
-      <h2>Sudoku Board</h2>
+      <h2>🧩 Sudoku</h2>
+
       <div className="meta">
         {!GameOverScreen && (
           <>
             <div>
               <strong>Difficulty:</strong> {sudokuGameDifficulty ?? "—"}
             </div>
+            <div>
+              <strong>Remaining Cells:</strong> {remainingCells}
+            </div>
 
-            <div> Remaining Cells: {remainingCells}</div>
             {SudokuBoardMain}
-            <button onClick={handleShowSolution}>
-              {showSolution ? "Hide Solution" : "Show Solution"}
-            </button>
+
+            <div className="sudoku-utility-bar">
+              <button
+                className="sudoku-utility-button"
+                onClick={handleShowSolution}
+              >
+                {showSolution ? "Hide Solution" : "Show Solution"}
+              </button>
+            </div>
+
             {showSolution && (
-              <>
-                <div className="solution">
-                  <strong>Solution:</strong>{" "}
-                  {Array.isArray(sudokuGameSolution)
-                    ? JSON.stringify(sudokuGameSolution)
-                    : "—"}
-                </div>
-              </>
+              <div
+                className="solution"
+                style={{ fontSize: ".9rem", overflowWrap: "anywhere" }}
+              >
+                <strong>Solution:</strong>{" "}
+                {Array.isArray(sudokuGameSolution)
+                  ? JSON.stringify(sudokuGameSolution)
+                  : "—"}
+              </div>
             )}
           </>
         )}
       </div>
+
       {GameOverScreen}
     </div>
   );
