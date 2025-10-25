@@ -4,9 +4,13 @@ import { SudokuGameMenu, SudokuBoard } from "./Components";
 import { GameTitles } from "../../Utils/enums";
 
 function Sudoku() {
-  const [sudokuGameData, setSudokuGameData] = useState<any>(null);
-  const [sudokuGameSolution, setSudokuGameSolution] = useState<any>(null);
-  const [sudokuGameDifficulty, setSudokuGameDifficulty] = useState<any>(null);
+  const [sudokuGameData, setSudokuGameData] = useState<number[][] | null>(null);
+  const [sudokuGameSolution, setSudokuGameSolution] = useState<
+    number[][] | null
+  >(null);
+  const [sudokuGameDifficulty, setSudokuGameDifficulty] = useState<
+    string | null
+  >(null);
   const fetchSudokuGameData = useCallback(async () => {
     fetch(
       "https://sudoku-api.vercel.app/api/dosuku?query={newboard(limit:1){grids{value,solution,difficulty},results,message}}",

@@ -1,0 +1,74 @@
+.sudoku-board-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.sudoku-board-container .meta {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.sudoku-board-main {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  gap: 2px;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* keep a square board */
+}
+
+.sudoku-cell {
+  border: 1px solid #000;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  user-select: none;
+  background: #fff;
+  cursor: pointer;
+}
+
+.sudoku-cell.selected {
+  outline: 2px solid #2b6cb0;
+  outline-offset: -2px;
+  background: #eef6ff;
+}
+
+/* Optional thicker subgrid borders (3x3 boxes) */
+.sudoku-cell {
+  position: relative;
+}
+.sudoku-cell:nth-child(9n + 1) {
+  border-left-width: 2px;
+}
+.sudoku-cell:nth-child(-n + 9) {
+  border-top-width: 2px;
+}
+.sudoku-cell:nth-child(9n) {
+  border-right-width: 2px;
+}
+.sudoku-cell:nth-last-child(-n + 9) {
+  border-bottom-width: 2px;
+}
+
+/* Thicker lines every 3 cells */
+.sudoku-cell {
+  box-shadow: inset 0 1px 0 0 #000, inset 1px 0 0 0 #000;
+}
+.sudoku-cell:nth-child(3n + 1) {
+  box-shadow: inset 2px 0 0 0 #000, inset 0 1px 0 0 #000;
+}
+.sudoku-cell:nth-child(-n + 9),
+.sudoku-cell:nth-child(n + 1):nth-child(-n + 9) {
+  box-shadow: inset 0 2px 0 0 #000, inset 1px 0 0 0 #000;
+}
