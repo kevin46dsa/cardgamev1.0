@@ -37,7 +37,9 @@ const Home = () => {
           ID: "sudoku",
           DATA: {
             name: "Sudoku",
-            imgUrls: ["/sudoku.png"],
+            imgUrls: [
+              "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/ChatGPT%20Image%20Oct%2025%2C%202025%2C%2005_26_03%20PM.png?alt=media&token=5202ef72-00f7-42f0-9321-293a71be46ac",
+            ],
           },
         });
 

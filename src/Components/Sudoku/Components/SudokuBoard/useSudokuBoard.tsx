@@ -169,7 +169,9 @@ export const useSudokuBoard = (props: SudokuBoardProps) => {
       </div>
 
       <div className="sudoku-board-instructions">
-        {selectedCell ? "Pick a number to place it!" : "Tap a square to start"}
+        {selectedCell
+          ? "Pick a number to place it!"
+          : "Tap a cell to select it."}
       </div>
 
       <div className="sudoku-board-options" aria-label="Number pad">
