@@ -5,12 +5,13 @@ import { useGameDeck } from "../../hooks/useGameDeck";
 
 function NeverHave() {
   const GameTitle = GameTitles.Neverhaveiever;
-  const { data, loading, message, pick } = useGameDeck(GameIDs.Neverhaveiever);
+  const { data, loading, message, drawId, pick } = useGameDeck(GameIDs.Neverhaveiever);
 
   return (
     <FlashCardGame
       title={GameTitle}
       message={message}
+      drawId={drawId}
       ready={!loading && data?.Questions?.length > 0}
       buttons={[{ label: "Generate", onClick: () => pick("Questions") }]}
     />

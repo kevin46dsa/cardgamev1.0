@@ -1,0 +1,60 @@
+:root {
+  /* colors — lifted from the app's one existing deliberate design system
+     (Sudoku's slate/indigo/amber/green/cyan palette) */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #1f2937;
+  --color-text-muted: #374151;
+
+  --color-primary: #3730a3;
+  --color-primary-bg: #eef2ff;
+  --color-primary-soft: #e0e7ff;
+
+  --color-accent: #f59e0b;
+  --color-accent-bg: #fde68a;
+  --color-accent-text: #78350f;
+
+  --color-success: #22c55e;
+  --color-success-bg: #ecfdf5;
+  --color-info: #22d3ee;
+  --color-info-bg: #ecfeff;
+  --color-info-text: #155e75;
+  --color-focus-ring: #60a5fa;
+
+  /* spacing scale — --space-xl matches MainPlayer's prior fixed 50px so its
+     clamp()-based fix stays visually identical on desktop */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 50px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto,
+    Arial, sans-serif;
+}
+
+/* Reusable "pressed 3D button" pattern, generalized from Sudoku's
+   .sudoku-option-button box-shadow trick so any element can opt in. */
+.pressable {
+  --press-depth: 3px;
+  --press-shadow: var(--color-accent);
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 var(--press-depth) 0 var(--press-shadow);
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+.pressable:active {
+  transform: translateY(var(--press-depth));
+  box-shadow: 0 0 0 var(--press-shadow);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pressable {
+    transition: none;
+  }
+}

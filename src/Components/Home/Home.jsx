@@ -1,12 +1,10 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { Button, Card } from "react-bootstrap";
 import { useGamesList } from "../../hooks/useGamesList";
 import { GameIDs, GameTitles } from "../../Utils/enums";
 import { s3Url } from "../../Utils/s3";
+import Corner3D from "../Decorative/Corner3D";
+import "./Home.css";
 
 const SUDOKU_COVER =
   "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/ChatGPT%20Image%20Oct%2025%2C%202025%2C%2005_26_03%20PM.png?alt=media&token=5202ef72-00f7-42f0-9321-293a71be46ac";
@@ -34,36 +32,23 @@ const Home = () => {
   const visibleGames = useMemo(() => [...games, ...EXTRA_GAMES], [games]);
 
   return (
-    <div>
-      <br />
-      <br />
-      <br />
-
-      <h1 style={{ textAlign: "center", fontWeight: "bold" }}>Pick A Game</h1>
-      <br />
-      <br />
-      <Container>
-        <Row xs={1} sm={1} md={1} lg={2}>
-          {!loading &&
-            visibleGames.map((game) => (
-              <Col key={game.ID}>
-                <Card style={{ margin: "20px" }}>
-                  <Card.Img
-                    alt="Game Cover"
-                    onClick={() => navigate(`/${game.ID}`)}
-                    src={game.DATA.imgUrls[0]}
-                    style={{ height: "400px" }}
-                  />
-                  <Card.Body style={{ textAlign: "center" }}>
-                    <Button size="lg" onClick={() => navigate(`/${game.ID}`)}>
-                      Lets play {game.DATA.name}!!
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-        </Row>
-      </Container>
+    <div className="home-page">
+      <Corner3D corner="top-right" />
+      <h1 className="home-title">Pick A Game</h1>
+      <div className="home-grid">
+        {!loading &&
+          visibleGames.map((game, index) => (
+            <button
+              key={game.ID}
+              className="home-card pressable"
+              style={{ "--i": index }}
+              onClick={() => navigate(`/${game.ID}`)}
+            >
+              <img className="home-card-img" alt="Game Cover" src={game.DATA.imgUrls[0]} />
+              <div className="home-card-body">Let's play {game.DATA.name}!!</div>
+            </button>
+          ))}
+      </div>
     </div>
   );
 };

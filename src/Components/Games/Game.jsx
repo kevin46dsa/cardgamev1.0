@@ -35,9 +35,16 @@ const Game = () => {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h1>Lets Play {data?.name}</h1>
-      {hasRules && <Button onClick={() => setShowRules(true)}>Rules</Button>}
+    <div className="game-page">
+      <h1 className="game-title">Lets Play {data?.name}</h1>
+      {hasRules && (
+        <Button
+          className="pressable game-button"
+          onClick={() => setShowRules(true)}
+        >
+          Rules
+        </Button>
+      )}
 
       <RulesModal
         show={showRules}
@@ -46,14 +53,15 @@ const Game = () => {
         imageSrc={data?.rules}
       />
 
-      <div style={{ height: "30px" }}></div>
       <Container>
         <Row>
           <Col key={id}>
-            <Card>
+            <Card className="game-card">
               <Card.Img src={currentCard ?? startCard} key={currentCard} />
               <Card.Body>
-                <Button onClick={handlePickCard}>Pick Random Card</Button>
+                <Button className="pressable game-button" onClick={handlePickCard}>
+                  Pick Random Card
+                </Button>
               </Card.Body>
             </Card>
           </Col>

@@ -11,6 +11,10 @@ import { useAsyncOnce } from "./useAsyncOnce";
 export function useGameDeck(gameId) {
   const { data, loading, error } = useAsyncOnce(() => fetchGame(gameId), [gameId]);
   const [message, setMessage] = useState("");
+  // Increments on every draw so a card-flip animation can key off it — unlike
+  // `message`, which can repeat the same string on consecutive draws from a
+  // small pool and would silently fail to re-trigger a remount-based animation.
+  const [drawId, setDrawId] = useState(0);
 
   const pick = useCallback(
     (field) => {
@@ -18,9 +22,10 @@ export function useGameDeck(gameId) {
       if (!pool || pool.length === 0) return;
       const random = pool[Math.floor(Math.random() * pool.length)];
       setMessage(random);
+      setDrawId((n) => n + 1);
     },
     [data]
   );
 
-  return { data, loading, error, message, pick };
+  return { data, loading, error, message, drawId, pick };
 }
