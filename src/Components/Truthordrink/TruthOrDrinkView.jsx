@@ -6,10 +6,10 @@ import { useTruthOrDrinkDeck } from "./useTruthOrDrinkDeck";
 import { s3Url } from "../../Utils/s3";
 import "./TruthOrDrinkView.css";
 
-const NO_CARD_PICKED_YET = s3Url("utility", "Screenshot 2023-09-03 at 5.25.55 PM.png");
-const NO_MORE_CARDS = s3Url("utility", "For playing.png");
-const DEFAULT_TWIST_COVER = s3Url("utility", "Screenshot 2023-09-03 at 5.36.50 PM.png");
-const RANDOM_MODE_RULES_IMAGE = s3Url("utility", "Screenshot 2023-09-04 at 9.20.24 PM.png");
+const NO_CARD_PICKED_YET = s3Url("Utility", "Screenshot 2023-09-03 at 5.25.55 PM.png");
+const NO_MORE_CARDS = s3Url("Utility", "For playing.png");
+const DEFAULT_TWIST_COVER = s3Url("Utility", "Screenshot 2023-09-03 at 5.36.50 PM.png");
+const RANDOM_MODE_RULES_IMAGE = s3Url("Utility", "Screenshot 2023-09-04 at 9.20.24 PM.png");
 
 const TWIST_SLOTS = [0, 1, 2, 3];
 
