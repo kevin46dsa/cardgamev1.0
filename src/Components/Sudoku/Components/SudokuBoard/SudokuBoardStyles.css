@@ -199,13 +199,42 @@
   outline-offset: 2px;
 }
 
-/* Small phones polish */
-@media (max-width: 380px) {
+/* ---------- Mobile ---------- */
+@media (max-width: 600px) {
+  /* MainPlayer wraps every game in a fixed 50px padding shell; cancel it
+     here so the board can stretch near the screen edges on phones. */
+  .sudoku-container {
+    margin: 0 -50px;
+  }
   .sudoku-board-container {
-    padding: 12px;
+    padding: 6px;
+    gap: 10px;
+    max-width: 100%;
+  }
+  .sudoku-board-main {
+    border-radius: 8px;
+  }
+  .sudoku-board-options {
+    gap: 4px;
   }
   .sudoku-option-button {
-    min-height: 40px;
-    font-size: 1rem;
+    min-height: 0;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    font-size: clamp(0.85rem, 4.5vw, 1.05rem);
+    border-radius: 8px;
+  }
+  .sudoku-utility-button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .sudoku-board-container {
+    padding: 4px;
+  }
+  .sudoku-board-options {
+    gap: 3px;
   }
 }

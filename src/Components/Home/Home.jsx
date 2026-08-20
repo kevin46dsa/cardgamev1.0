@@ -1,55 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Button } from "react-bootstrap";
-import { Card } from "react-bootstrap";
-//import Image from 'react-bootstrap/esm/Image';
-import { getDocs, collection } from "firebase/firestore";
-import { db } from "../../firebase";
+import { Button, Card } from "react-bootstrap";
+import { useGamesList } from "../../hooks/useGamesList";
+import { GameIDs, GameTitles } from "../../Utils/enums";
+
+const SUDOKU_COVER =
+  "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/ChatGPT%20Image%20Oct%2025%2C%202025%2C%2005_26_03%20PM.png?alt=media&token=5202ef72-00f7-42f0-9321-293a71be46ac";
+
+// Firestore-only remnants of removed games (Mr. White, You Laugh You Lose) —
+// their routes/components no longer exist, so keep them off the game list.
+const HIDDEN_GAME_IDS = ["MrWhite", "6vfbnEVnnoheLfGLABKk"];
 
 const Home = () => {
-  let navigate = useNavigate();
-  const [games, setGames] = useState([]);
+  const navigate = useNavigate();
+  const { games, loading } = useGamesList();
 
-  useEffect(() => {
-    async function fetchListings() {
-      try {
-        // execute the query
-        let games = [];
-        const querySnapshot = await getDocs(collection(db, "game"));
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          let struct = {
-            ID: doc.id,
-            DATA: doc.data(),
-          };
+  const visibleGames = useMemo(() => {
+    const withoutHidden = games.filter((game) => !HIDDEN_GAME_IDS.includes(game.ID));
+    return [
+      ...withoutHidden,
+      {
+        ID: GameIDs.sudoku,
+        DATA: { name: GameTitles.sudoku, imgUrls: [SUDOKU_COVER] },
+      },
+    ];
+  }, [games]);
 
-          games.push(struct);
-        });
-
-        // Remove the MrWhite game from the list
-        games = games.filter((game) => game.ID !== "MrWhite");
-
-        // add sudoku to the list
-        games.push({
-          ID: "sudoku",
-          DATA: {
-            name: "Sudoku",
-            imgUrls: [
-              "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/ChatGPT%20Image%20Oct%2025%2C%202025%2C%2005_26_03%20PM.png?alt=media&token=5202ef72-00f7-42f0-9321-293a71be46ac",
-            ],
-          },
-        });
-
-        setGames(games);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchListings();
-  }, []);
   return (
     <div>
       <br />
@@ -61,30 +40,24 @@ const Home = () => {
       <br />
       <Container>
         <Row xs={1} sm={1} md={1} lg={2}>
-          {games.map((game, index) => (
-            <Col key={index}>
-              <Card style={{ margin: "20px" }}>
-                <Card.Img
-                  alt="Game Cover"
-                  onClick={() => {
-                    navigate(`/${game.ID}`);
-                  }}
-                  src={game.DATA.imgUrls[0]}
-                  style={{ height: "400px" }}
-                />
-                <Card.Body style={{ textAlign: "center" }}>
-                  <Button
-                    size="lg"
-                    onClick={() => {
-                      navigate(`/${game.ID}`);
-                    }}
-                  >
-                    Lets play {game.DATA.name}!!
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+          {!loading &&
+            visibleGames.map((game) => (
+              <Col key={game.ID}>
+                <Card style={{ margin: "20px" }}>
+                  <Card.Img
+                    alt="Game Cover"
+                    onClick={() => navigate(`/${game.ID}`)}
+                    src={game.DATA.imgUrls[0]}
+                    style={{ height: "400px" }}
+                  />
+                  <Card.Body style={{ textAlign: "center" }}>
+                    <Button size="lg" onClick={() => navigate(`/${game.ID}`)}>
+                      Lets play {game.DATA.name}!!
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
         </Row>
       </Container>
     </div>

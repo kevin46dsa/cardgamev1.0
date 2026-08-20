@@ -7,4 +7,11 @@ export default defineConfig({
   build: {
     outDir: "build", // CRA's default build output
   },
+  test: {
+    environment: "happy-dom",
+    setupFiles: "./src/setupTests.js",
+    globals: true,
+    pool: "threads",
+    exclude: ["e2e/**", "node_modules/**"],
+  },
 });

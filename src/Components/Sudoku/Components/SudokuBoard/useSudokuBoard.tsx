@@ -115,6 +115,16 @@ export const useSudokuBoard = (props: SudokuBoardProps) => {
 
   const options = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9], []);
 
+  // Count how many of each number are already placed; a number that's
+  // used all 9 times doesn't need to be offered anymore.
+  const optionCounts = useMemo(() => {
+    const counts: Record<number, number> = {};
+    gameData.flat().forEach((cell) => {
+      if (cell.value) counts[cell.value] = (counts[cell.value] ?? 0) + 1;
+    });
+    return counts;
+  }, [gameData]);
+
   // Helpful classes for 3×3 borders & alternating box tint
   const getBoxClasses = (row: number, col: number) => {
     const classes = [];
@@ -180,7 +190,7 @@ export const useSudokuBoard = (props: SudokuBoardProps) => {
             key={num}
             type="button"
             className="sudoku-option-button"
-            disabled={selectedCell === null}
+            disabled={selectedCell === null || (optionCounts[num] ?? 0) >= 9}
             onClick={() => handleOnOptionSelect(num)}
           >
             {num}

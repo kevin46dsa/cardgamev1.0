@@ -1,4 +1,4 @@
-import { doc, getDoc,addDoc,collection } from "firebase/firestore";
+import { doc, getDoc, getDocs, addDoc, collection } from "firebase/firestore";
 import {
   getStorage,
   ref,
@@ -70,6 +70,20 @@ export function calculateDimensions(desiredHeight, ratioWidth = 1011, ratioHeigh
           }
     }
 
+
+/**
+ * A utility function to fetch every game document
+ *
+ * @returns {Promise<Array<{ID: string, DATA: object}>>}
+ */
+export async function fetchGames() {
+  const querySnapshot = await getDocs(collection(db, "game"));
+  const games = [];
+  querySnapshot.forEach((docSnap) => {
+    games.push({ ID: docSnap.id, DATA: docSnap.data() });
+  });
+  return games;
+}
 
 /**
  * A utility function to Create a new game

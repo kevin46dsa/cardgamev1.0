@@ -1,85 +1,19 @@
-import React, { useState, useEffect, useCallback } from "react";
-import CardDesign from "../CardDesigns/CardDesign";
+import React from "react";
+import FlashCardGame from "../FlashCardGame/FlashCardGame";
 import { GameTitles, GameIDs } from "../../Utils/enums";
-import { fetchGame } from "../../Utils/Basic";
+import { useGameDeck } from "../../hooks/useGameDeck";
 
 function WhoIsMostLikely() {
-  const [message, setMessage] = useState("");
-  const [questionState, setQuestions] = useState([]);
   const GameTitle = GameTitles.WhoIsMostLikely;
-
-  useEffect(() => {
-    async function fetchListings() {
-      try {
-        // execute the query
-        const data = await fetchGame(GameIDs.WhoIsMostLikely);
-        if (data.Questions.length > 0) {
-          setQuestions(data.Questions);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchListings();
-  }, []);
-
-  const handleGenerateNewCard = useCallback(() => {
-    const randomTruth =
-      questionState[Math.floor(Math.random() * questionState.length)];
-    setMessage(randomTruth);
-  }, [questionState]);
+  const { data, loading, message, pick } = useGameDeck(GameIDs.WhoIsMostLikely);
 
   return (
-    <div className="truthor-dare-container">
-      <br />
-      <br />
-      <br />
-      <h1>{GameTitle}</h1>
-      <br />
-      <br />
-      {message && <CardDesign message={message} title={GameTitle} />}
-      {questionState.length > 0 && (
-        <div className="button-container">
-          <button onClick={() => handleGenerateNewCard()}>Generate</button>
-        </div>
-      )}
-
-      <style>{`
-          .truthor-dare-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          }
-  
-          .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-          }
-  
-          button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-          }
-  
-          @media (max-width: 480px) {
-            h1 {
-              font-size: 24px;
-            }
-  
-            button {
-              font-size: 16px;
-              padding: 8px 16px;
-            }
-          }
-        `}</style>
-    </div>
+    <FlashCardGame
+      title={GameTitle}
+      message={message}
+      ready={!loading && data?.Questions?.length > 0}
+      buttons={[{ label: "Generate", onClick: () => pick("Questions") }]}
+    />
   );
 }
 
