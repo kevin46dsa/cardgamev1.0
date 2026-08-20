@@ -21,7 +21,7 @@ const EXTRA_GAMES = [
   },
   {
     ID: GameIDs.truthordrink,
-    DATA: { name: GameTitles.truthordrink, imgUrls: [s3Url("utility", "cover picture al.png")] },
+    DATA: { name: GameTitles.truthordrink, imgUrls: [s3Url("Utility", "cover picture al.png")] },
   },
 ];
 

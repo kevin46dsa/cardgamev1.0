@@ -24,7 +24,7 @@ function Truthordrink()  {
                     
                         <Col>
                         <Card style={{margin: "20px"}}>
-                        <Card.Img alt="Game Cover" onClick={()=>{navigate(`/truthordrink/3VYgpS7VAfD86qrsOT9W`)}} src={s3Url("utility", "cover pictures 1.png")} style={{height:"400px"}}/>
+                        <Card.Img alt="Game Cover" onClick={()=>{navigate(`/truthordrink/3VYgpS7VAfD86qrsOT9W`)}} src={s3Url("Utility", "cover pictures 1.png")} style={{height:"400px"}}/>
                         <Card.Body style={{textAlign: "center"}}>
                         <Button size='lg' onClick={()=>{navigate(`/truthordrink/3VYgpS7VAfD86qrsOT9W`)}}>Lets play On The Rocks!!</Button>
                         </Card.Body>
@@ -33,7 +33,7 @@ function Truthordrink()  {
 
                         <Col>
                         <Card style={{margin: "20px"}}>
-                        <Card.Img alt="Game Cover" onClick={()=>{navigate(`/truthordrink/axjXX9veP0KzvOZKJMSn`)}} src={s3Url("utility", "cover pictures 2.png")} style={{height:"400px"}}/>
+                        <Card.Img alt="Game Cover" onClick={()=>{navigate(`/truthordrink/axjXX9veP0KzvOZKJMSn`)}} src={s3Url("Utility", "cover pictures 2.png")} style={{height:"400px"}}/>
                         <Card.Body style={{textAlign: "center"}}>
                         <Button size='lg' onClick={()=>{navigate('/truthordrink/axjXX9veP0KzvOZKJMSn')}}>Lets play Last Call!!</Button>
                         </Card.Body>
@@ -42,7 +42,7 @@ function Truthordrink()  {
 
                         <Col >
                         <Card style={{margin: "20px"}}>
-                        <Card.Img alt="Game Cover" onClick={()=>{navigate(`/truthordrink/cF3CqSjUmMTVO5sBFNzo`)}} src={s3Url("utility", "cover pictures 4.png")} style={{height:"400px"}}/>
+                        <Card.Img alt="Game Cover" onClick={()=>{navigate(`/truthordrink/cF3CqSjUmMTVO5sBFNzo`)}} src={s3Url("Utility", "cover pictures 4.png")} style={{height:"400px"}}/>
                         <Card.Body style={{textAlign: "center"}}>
                         <Button size='lg' onClick={()=>{navigate(`/truthordrink/cF3CqSjUmMTVO5sBFNzo`)}}>Lets play Extra Dirty!!</Button>
                         </Card.Body>
@@ -51,7 +51,7 @@ function Truthordrink()  {
 
                         <Col>
                         <Card style={{margin: "20px"}}>
-                        <Card.Img alt="Game Cover" onClick={()=>{navigate(`/truthordrink/Eg6tVYEv769y7JcMcOnr`)}} src={s3Url("utility", "cover pictures 3.png")} style={{height:"400px"}}/>
+                        <Card.Img alt="Game Cover" onClick={()=>{navigate(`/truthordrink/Eg6tVYEv769y7JcMcOnr`)}} src={s3Url("Utility", "cover pictures 3.png")} style={{height:"400px"}}/>
                         <Card.Body style={{textAlign: "center"}}>
                         <Button size='lg' onClick={()=>{navigate(`/truthordrink/Eg6tVYEv769y7JcMcOnr`)}}>Lets play Happy Hour!!</Button>
                         </Card.Body>
@@ -60,7 +60,7 @@ function Truthordrink()  {
 
                         <Col>
                         <Card style={{margin: "20px"}}>
-                        <Card.Img alt="Game Cover" onClick={()=>{navigate(`/truthordrinkrandom`)}} src={s3Url("utility", "cover picture al.png")} style={{height:"400px"}}/>
+                        <Card.Img alt="Game Cover" onClick={()=>{navigate(`/truthordrinkrandom`)}} src={s3Url("Utility", "cover picture al.png")} style={{height:"400px"}}/>
                         <Card.Body style={{textAlign: "center"}}>
                         <Button size='lg' onClick={()=>{navigate(`/truthordrinkrandom`)}}>Generate Random!!</Button>
                         </Card.Body>
