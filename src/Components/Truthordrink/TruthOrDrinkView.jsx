@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { Button, Card, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import RulesModal from "../RulesModal/RulesModal";
 import { useCardPool } from "../../hooks/useCardPool";
 import { useTruthOrDrinkDeck } from "./useTruthOrDrinkDeck";
 import { s3Url } from "../../Utils/s3";
+import "./TruthOrDrinkView.css";
 
 const NO_CARD_PICKED_YET = s3Url("utility", "Screenshot 2023-09-03 at 5.25.55 PM.png");
 const NO_MORE_CARDS = s3Url("utility", "For playing.png");
@@ -47,10 +45,18 @@ const TruthOrDrinkView = ({ mode, id }) => {
   const rulesImage = mode === "random" ? RANDOM_MODE_RULES_IMAGE : rules;
 
   return (
-    <div style={{ textAlign: "center" }}>
-      {mode === "single" && <h1>Lets Play {name}</h1>}
-      {displayRules && !loading && <Button onClick={() => setShowRules(true)}>Rules</Button>}
-      <Button onClick={() => setShowTwist(true)}>Add a Twist</Button>
+    <div className="td-page">
+      {mode === "single" && <h1 className="td-title">Let's Play {name}</h1>}
+      <div className="td-actions">
+        {displayRules && !loading && (
+          <Button className="td-button pressable" onClick={() => setShowRules(true)}>
+            Rules
+          </Button>
+        )}
+        <Button className="td-button pressable" onClick={() => setShowTwist(true)}>
+          Add a Twist
+        </Button>
+      </div>
 
       <RulesModal show={showRules} onHide={() => setShowRules(false)} title={rulesTitle} imageSrc={rulesImage} />
 
@@ -59,27 +65,18 @@ const TruthOrDrinkView = ({ mode, id }) => {
           <Modal.Title>Add a twist</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Container>
-            <Row xs={1} sm={1} md={1} lg={2}>
-              {TWIST_SLOTS.map((slotIndex) => (
-                <Col key={slotIndex}>
-                  <Card style={{ margin: "20px" }}>
-                    <Card.Img
-                      alt="Twist card"
-                      onClick={() => pickTwistCard(slotIndex)}
-                      src={twistSlots[slotIndex]}
-                      style={{ height: "300px" }}
-                    />
-                    <Card.Body style={{ textAlign: "center" }}>
-                      <Button size="lg" onClick={() => pickTwistCard(slotIndex)}>
-                        Show
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          </Container>
+          <div className="td-twist-grid">
+            {TWIST_SLOTS.map((slotIndex) => (
+              <div className="td-twist-card" key={slotIndex}>
+                <img alt="Twist card" onClick={() => pickTwistCard(slotIndex)} src={twistSlots[slotIndex]} />
+                <div className="td-actions">
+                  <Button className="td-button pressable" onClick={() => pickTwistCard(slotIndex)}>
+                    Show
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeTwist}>
@@ -88,19 +85,14 @@ const TruthOrDrinkView = ({ mode, id }) => {
         </Modal.Footer>
       </Modal>
 
-      <div style={{ height: "30px" }}></div>
-      <Container>
-        <Row>
-          <Col>
-            <Card>
-              <Card.Img src={currentCard ?? NO_CARD_PICKED_YET} key={currentCard} />
-              <Card.Body>
-                <Button onClick={pickMainCard}>Pick Random Card</Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+      <div className="td-card-frame">
+        <img className="td-card-img" src={currentCard ?? NO_CARD_PICKED_YET} key={currentCard} alt="Truth or Drink card" />
+      </div>
+      <div className="td-actions">
+        <Button className="td-button pressable" onClick={pickMainCard}>
+          Pick Random Card
+        </Button>
+      </div>
     </div>
   );
 };
