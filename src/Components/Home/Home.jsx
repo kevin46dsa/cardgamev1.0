@@ -31,10 +31,7 @@ const Home = () => {
   const navigate = useNavigate();
   const { games, loading } = useGamesList();
 
-  const visibleGames = useMemo(() => {
-    const withoutHidden = games.filter((game) => !HIDDEN_GAME_IDS.includes(game.ID));
-    return [...withoutHidden, ...EXTRA_GAMES];
-  }, [games]);
+  const visibleGames = useMemo(() => [...games, ...EXTRA_GAMES], [games]);
 
   return (
     <div>
