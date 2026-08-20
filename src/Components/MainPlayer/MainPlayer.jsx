@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import "./MainPlayer.css";
 import { GameIDs } from "../../Utils/enums";
 import Game from "../Games/Game";
 import TruthorDare from "../Truthordare/Truthordare";
@@ -13,7 +14,7 @@ const MainPlayer = () => {
   let { id } = useParams();
 
   return (
-    <div style={{ padding: "50px" }}>
+    <div className="main-player">
       {(() => {
         switch (id) {
           case GameIDs.TruthorDare:

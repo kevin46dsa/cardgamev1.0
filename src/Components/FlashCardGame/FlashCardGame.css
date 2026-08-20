@@ -11,14 +11,13 @@
 }
 
 .flash-card-game button {
-  margin: 10px;
+  margin: var(--space-sm);
   padding: 10px 20px;
   font-size: 18px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  font-weight: 700;
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-text);
+  border-radius: var(--radius-md);
 }
 
 @media (max-width: 480px) {

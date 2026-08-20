@@ -1,0 +1,3 @@
+.main-player {
+  padding: clamp(var(--space-sm), 4vw, var(--space-xl));
+}

@@ -1,0 +1,36 @@
+.game-page {
+  text-align: center;
+  padding: var(--space-lg) var(--space-md);
+}
+
+.game-title {
+  font-weight: 800;
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  color: var(--color-primary);
+  margin: 0 0 var(--space-md);
+}
+
+.game-card {
+  border: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  margin-top: var(--space-lg);
+}
+
+.game-button {
+  margin: var(--space-sm);
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: 700;
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-text);
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 480px) {
+  .game-button {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+}

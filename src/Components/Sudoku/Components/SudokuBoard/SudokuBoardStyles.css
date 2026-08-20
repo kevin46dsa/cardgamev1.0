@@ -201,11 +201,6 @@
 
 /* ---------- Mobile ---------- */
 @media (max-width: 600px) {
-  /* MainPlayer wraps every game in a fixed 50px padding shell; cancel it
-     here so the board can stretch near the screen edges on phones. */
-  .sudoku-container {
-    margin: 0 -50px;
-  }
   .sudoku-board-container {
     padding: 6px;
     gap: 10px;

@@ -7,7 +7,7 @@ import "./FlashCardGame.css";
  * Never Have I Ever, Who's Most Likely To...). Previously each game
  * copy-pasted this layout plus an identical <style> block.
  */
-const FlashCardGame = ({ title, cardTitle, message, buttons = [], ready }) => {
+const FlashCardGame = ({ title, cardTitle, message, buttons = [], ready, drawId }) => {
   return (
     <div className="flash-card-game">
       <br />
@@ -16,11 +16,13 @@ const FlashCardGame = ({ title, cardTitle, message, buttons = [], ready }) => {
       <h1>{title}</h1>
       <br />
       <br />
-      {message && <CardDesign message={message} title={cardTitle ?? title} />}
+      {message && (
+        <CardDesign message={message} title={cardTitle ?? title} drawId={drawId} />
+      )}
       {ready && buttons.length > 0 && (
         <div className="button-container">
           {buttons.map(({ label, onClick }) => (
-            <button key={label} onClick={onClick}>
+            <button key={label} className="pressable" onClick={onClick}>
               {label}
             </button>
           ))}
