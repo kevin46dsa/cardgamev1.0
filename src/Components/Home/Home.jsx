@@ -6,13 +6,26 @@ import Col from "react-bootstrap/Col";
 import { Button, Card } from "react-bootstrap";
 import { useGamesList } from "../../hooks/useGamesList";
 import { GameIDs, GameTitles } from "../../Utils/enums";
+import { s3Url } from "../../Utils/s3";
 
 const SUDOKU_COVER =
   "https://firebasestorage.googleapis.com/v0/b/card-game-45e80.appspot.com/o/ChatGPT%20Image%20Oct%2025%2C%202025%2C%2005_26_03%20PM.png?alt=media&token=5202ef72-00f7-42f0-9321-293a71be46ac";
 
-// Firestore-only remnants of removed games (Mr. White, You Laugh You Lose) —
-// their routes/components no longer exist, so keep them off the game list.
-const HIDDEN_GAME_IDS = ["MrWhite", "6vfbnEVnnoheLfGLABKk"];
+
+
+// Games that live in their own top-level Firestore collection (not the
+// generic "game" collection Home otherwise lists), so they're added here
+// by hand — same reason Sudoku has always been hardcoded below.
+const EXTRA_GAMES = [
+  {
+    ID: GameIDs.sudoku,
+    DATA: { name: GameTitles.sudoku, imgUrls: [SUDOKU_COVER] },
+  },
+  {
+    ID: GameIDs.truthordrink,
+    DATA: { name: GameTitles.truthordrink, imgUrls: [s3Url("utility", "cover picture al.png")] },
+  },
+];
 
 const Home = () => {
   const navigate = useNavigate();
@@ -20,13 +33,7 @@ const Home = () => {
 
   const visibleGames = useMemo(() => {
     const withoutHidden = games.filter((game) => !HIDDEN_GAME_IDS.includes(game.ID));
-    return [
-      ...withoutHidden,
-      {
-        ID: GameIDs.sudoku,
-        DATA: { name: GameTitles.sudoku, imgUrls: [SUDOKU_COVER] },
-      },
-    ];
+    return [...withoutHidden, ...EXTRA_GAMES];
   }, [games]);
 
   return (
