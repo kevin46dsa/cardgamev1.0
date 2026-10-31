@@ -1,6 +1,7 @@
 // Barrel so handlers can `import { withRoom, putPlayer } from "@party/shared/src/db"`.
 export * from "./bindPairCode";
 export * from "./clearConnection";
+export * from "./clearLeftovers";
 export * from "./client";
 export * from "./createPairCode";
 export * from "./createRoom";

@@ -1,5 +1,5 @@
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { beforeEach, expect, test } from "vitest";
 import { createRoom } from "./createRoom";
 
@@ -15,9 +15,17 @@ test("puts META v1 with a collision guard and idle ttl", async () => {
   expect(i.Item!.ttl).toBeGreaterThan(Date.now() / 1000);
 });
 
+test("clears leftover items of an expired room that used the same code", async () => {
+  m.on(PutCommand).resolves({});
+  m.on(QueryCommand).resolves({ Items: [] });
+  await createRoom("KQXM", {});
+  expect(m.commandCalls(QueryCommand)).toHaveLength(1);
+});
+
 test("returns false on collision, rethrows other errors", async () => {
   m.on(PutCommand).rejectsOnce(Object.assign(new Error("x"), { name: "ConditionalCheckFailedException" }));
   expect(await createRoom("KQXM", {})).toBe(false);
+  expect(m.commandCalls(QueryCommand)).toHaveLength(0); // a taken code is never wiped
   m.reset();
   m.on(PutCommand).rejects(new Error("boom"));
   await expect(createRoom("KQXM", {})).rejects.toThrow("boom");
