@@ -2,9 +2,13 @@ import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { useCardPool } from "./useCardPool";
 
+// Stable references: the hook resets its pool whenever the cards array identity changes.
+const ABC = ["a", "b", "c"];
+const ONLY = ["only"];
+
 describe("useCardPool", () => {
   it("draws every card exactly once without replacement", () => {
-    const { result } = renderHook(() => useCardPool(["a", "b", "c"]));
+    const { result } = renderHook(() => useCardPool(ABC));
 
     const drawn = new Set();
     act(() => drawn.add(result.current.draw()));
@@ -16,7 +20,7 @@ describe("useCardPool", () => {
   });
 
   it("returns undefined once the pool is exhausted", () => {
-    const { result } = renderHook(() => useCardPool(["only"]));
+    const { result } = renderHook(() => useCardPool(ONLY));
 
     act(() => result.current.draw());
     let extra;

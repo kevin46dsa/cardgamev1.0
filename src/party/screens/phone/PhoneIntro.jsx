@@ -10,14 +10,14 @@ export default function PhoneIntro() {
   const { state } = useParty();
   const { view } = state;
   const [opponent] = opponents(view);
-  const note = isContestant(view) ? (
-    <h2 className="party-title">You're up against {nameOf(view, opponent)}. Get ready to write!</h2>
-  ) : (
-    <h2 className="party-title">Next match starting. Get ready to vote!</h2>
-  );
   return (
     <>
-      <StageOrNote stage={TvIntro} note={note} />
+      <StageOrNote stage={TvIntro} note={null} />
+      {isContestant(view) ? (
+        <h2 className="party-title">You're up against {nameOf(view, opponent)}. Get ready to write!</h2>
+      ) : (
+        <h2 className="party-title">Next match starting. Get ready to vote!</h2>
+      )}
       <RoleNotice />
     </>
   );
