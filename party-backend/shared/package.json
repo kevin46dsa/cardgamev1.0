@@ -1,2 +1,11 @@
 { "name": "@party/shared", "version": "0.0.0", "private": true, "main": "src/protocol.ts",
-  "scripts": { "typecheck": "tsc -p ." } }
+  "scripts": { "typecheck": "tsc -p .", "test": "vitest run" },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.700.0",
+    "@aws-sdk/lib-dynamodb": "^3.700.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "aws-sdk-client-mock": "^4.1.0",
+    "vitest": "^4.1.11"
+  } }
