@@ -9,6 +9,8 @@ import Truthordrinkrandomplayer from './Components/Truthordrink/Truthordrinkrand
 import UpdateMenu from './Components/UpdateMenu/UpdateMenu';
 import GenerateFolder from './Components/GenerateFolder/GenerateFolder';
 import ErrorBoundary from './ErrorBoundary';
+import PhoneApp from './party/screens/phone/PhoneApp';
+import TvApp from './party/screens/tv/TvApp';
 import { ToastProvider } from './providers/ToastProvider';
 
 function App() {
@@ -19,6 +21,9 @@ function App() {
           <div>
             <Routes>
               <Route path='/' element={<Home />} />
+              <Route path="/party" element={<PhoneApp/>}/>
+              <Route path="/party/join/:code?" element={<PhoneApp/>}/>
+              <Route path="/party/tv" element={<TvApp/>}/>
               <Route path="/:id" element={<MainPlayer/>}/>
               <Route path="/update/:id" element={<UpdateMenu/>}/>
               <Route path="/truthordrinkrandom" element={<Truthordrinkrandomplayer/>}/>
