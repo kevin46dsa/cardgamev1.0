@@ -8,3 +8,5 @@ export const voteSk = (match: number, voterId: string) => `VOTE#${match}#${voter
 export const pairPk = (code4: string) => `PAIR#${code4}`;
 export const PAIR = "PAIR";
 export const ratePk = (key: string) => `RATE#${key}`;
+export const connPk = (connectionId: string) => `CONN#${connectionId}`;
+export const CONN = "CONN";

@@ -2,8 +2,9 @@ import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { db, table } from "./client";
 import { isConditionFailed } from "./isConditionFailed";
 import { playerSk, roomPk } from "./keys";
+import { putConnection } from "./putConnection";
 
-// Writes the `connectionId` attribute the GSI indexes. false = player item does not exist.
+// Binds the player to this socket and writes the CONN# reverse-lookup item. false = player item does not exist.
 export async function setConnection(code: string, playerId: string, connectionId: string): Promise<boolean> {
   try {
     await db().send(new UpdateCommand({
@@ -13,6 +14,7 @@ export async function setConnection(code: string, playerId: string, connectionId
       ConditionExpression: "attribute_exists(pk)",
       ExpressionAttributeValues: { ":c": connectionId, ":t": true },
     }));
+    await putConnection(connectionId, code, playerId);
     return true;
   } catch (e) {
     if (isConditionFailed(e)) return false;

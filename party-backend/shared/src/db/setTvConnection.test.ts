@@ -1,5 +1,5 @@
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { beforeEach, expect, test } from "vitest";
 import { setTvConnection } from "./setTvConnection";
 
@@ -8,10 +8,12 @@ beforeEach(() => m.reset());
 
 test("updates connectionId on the TV item only if it exists", async () => {
   m.on(UpdateCommand).resolves({});
+  m.on(PutCommand).resolves({});
   expect(await setTvConnection("KQXM", "c9")).toBe(true);
   const i = m.commandCalls(UpdateCommand)[0]!.args[0].input;
   expect(i.Key).toEqual({ pk: "ROOM#KQXM", sk: "TV" });
   expect(i.ConditionExpression).toBe("attribute_exists(pk)");
+  expect(m.commandCalls(PutCommand)[0]!.args[0].input.Item).toMatchObject({ pk: "CONN#c9", code: "KQXM", playerId: null });
   m.on(UpdateCommand).rejects(Object.assign(new Error("x"), { name: "ConditionalCheckFailedException" }));
   expect(await setTvConnection("KQXM", "c9")).toBe(false);
 });

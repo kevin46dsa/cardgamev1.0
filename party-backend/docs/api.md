@@ -17,7 +17,7 @@ Any rejected action gets `{ "event": "error", "code": "<CODE>", "message": "..."
 7. Set one timer for each `endsAt` and send `advance {phaseId}` when it fires (TV/host at +0s, other clients at +3s
    and only if no newer `phaseId` arrived). Treat a `STALE_PHASE` error as success.
 
-## Data model (single table `PartyGames`, `pk` + `sk`, `ttl`, GSI `connectionId-index`)
+## Data model (single table `PartyGames`, `pk` + `sk`, `ttl`, no GSI)
 
 Chosen split: hot concurrent writes are one item per player, so ten phones never fight over one record.
 
@@ -28,6 +28,7 @@ Chosen split: hot concurrent writes are one item per player, so ten phones never
 | TV | `ROOM#KQXM` | `TV` | connectionId, tvTokenHash |
 | Answer | `ROOM#KQXM` | `ANSWER#<match>#<playerId>` | text, submittedAt |
 | Vote | `ROOM#KQXM` | `VOTE#<match>#<voterId>` | side A or B |
+| Connection lookup | `CONN#<connectionId>` | `CONN` | code, playerId (null = TV), ttl |
 | Pairing | `PAIR#7429` | `PAIR` | tvConnectionId, roomCode?, ttl 10 min |
 | Rate limit | `RATE#<ip or connId>` | `<window>` | count, ttl |
 
@@ -57,7 +58,7 @@ on conflict. These are low-frequency. A room is capped at 10 players, so META st
 | `endGame` | host | none | Everyone back to lobby, brackets cleared |
 | `playAgain` | host or TV | none | Brackets reset, same players, back to lobby |
 
-Disconnect handling is not an action: `$disconnect` finds the player through the `connectionId-index`, sets
+Disconnect handling is not an action: `$disconnect` finds the player through the `CONN#<connectionId>` item (written when a socket binds to a player or the TV, deleted on disconnect), sets
 `offlineSince` and the grace deadline, and notifies only TV, host and current opponent.
 
 ## Server to client events

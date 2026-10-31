@@ -14,11 +14,7 @@ export function createPartyGamesTable(scope: Construct): dynamodb.Table {
     removalPolicy: RemovalPolicy.DESTROY,
   });
 
-  // $disconnect only knows the connectionId; sparse, only items carrying one are indexed.
-  table.addGlobalSecondaryIndex({
-    indexName: "connectionId-index",
-    partitionKey: { name: "connectionId", type: dynamodb.AttributeType.STRING },
-  });
+  // No GSI on purpose: $disconnect finds its player through a CONN#<connectionId> item (see shared/src/db/putConnection.ts).
 
   return table;
 }
