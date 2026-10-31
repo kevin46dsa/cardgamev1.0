@@ -1,6 +1,6 @@
 # WebSocket API plan (contract for the backend and for the frontend agent)
 
-Planned, not yet implemented (only `ping` exists). One socket per client:
+**Implemented and deployed** (2026-10-31). The source of truth is `shared/src/protocol.ts` (types) and `ws-handler/README.md` (flows and a worked transcript); this file is the human summary. One socket per client:
 `wss://gamenight-ws.nosenterprise.org`. All messages are JSON text frames under 2 KB.
 Client sends `{ "action": "<name>", ... }`. Server replies/pushes `{ "event": "<name>", "serverNow": <ms>, ... }`.
 Any rejected action gets `{ "event": "error", "code": "<CODE>", "message": "..." }` with a code from the table at the end.
@@ -63,25 +63,48 @@ Disconnect handling is not an action: `$disconnect` finds the player through the
 
 ## Server to client events
 
+Every event carries `serverNow` (ms). Compute `offset = serverNow - Date.now()` once; render all countdowns from absolute deadlines.
+
 | Event | To | Payload |
 |---|---|---|
-| `snapshot` | the (re)connecting client | everything that client's role may see: phase, endsAt, players, hills, current match view, own answer/vote |
-| `players` | TV, host, then all in lobby | roster with online flags |
-| `phase` | all, role-specific content | phaseId, phase, endsAt, match {contestantA, contestantB, prompt}; crowd gets A/B only in vote phase |
-
-| `submitted` | all | contestantId only (no text). At most 2 per match |
-| `voteCount` | TV only, TV mode only | have, need. Never sent in phone-only mode; the total is in `reveal` |
-| `reveal` | all | authors, per-side votes, outcome (win/tie/forfeit), hill moves |
-| `hills` | all | hill rosters, who moves, who sits out, Valley pairings, finale bracket |
-| `hostChanged` | all | newHostId |
-| `paused` / `resumed` | all | until |
-| `tvStatus` | phones | connected/disconnected |
+| `pong` | caller | none |
+| `pairCode` | TV | code, expiresAt |
+| `paired` | TV | roomCode, tvToken (store it; used by `tvRejoin`) |
+| `roomCreated` | creator | roomCode, playerId, token (store all three) |
+| `joined` | joiner | playerId, token |
+| `snapshot` | the (re)connecting client | view, nextDeadline. Full role-specific state |
+| `state` | each recipient | view, nextDeadline, moves?. One per phase change, each recipient gets their own view |
+| `reveal` | each recipient | same as `state`, sent when the new phase is reveal. Authors and per-side votes appear only here |
+| `players` | TV, host, current opponent (all, in lobby) | players, hostId, nextDeadline |
+| `settings` | all in lobby | settings, estimatedMinutes |
+| `submitted` | TV + all phones | contestantId only (first submission only; no text) |
+| `voteCount` | TV only, TV mode only | have, need. Never sent in phone-only mode |
+| `voteAck` | the voter | side |
+| `ack` | caller | action (for `chooseTieBreak`) |
+| `hostChanged` | all | hostId, nextDeadline |
+| `paused` / `resumed` | all | until / endsAt, nextDeadline |
+| `tvStatus` | phones | connected |
 | `kicked` | the kicked player | none |
-| `roomEnded` | all | reason: host/idle |
+| `left` | the leaver | none |
+| `roomEnded` | all | reason `host` / `idle` |
 | `error` | caller | code, message |
 
-Secrets are never sent early: the vote-phase text goes out only when voting opens, authors only at reveal, and a
-contestant never receives the opponent's answer before the vote.
+`view` shape: `{code, mode, hostId, settings, estimatedMinutes, phase, phaseId, endsAt, pausedUntil?, act, round, rounds,
+players[], hills, finale?, king?, you, match?}`. `phase` is one of `lobby intro write vote tiebreak reveal transition final`.
+`view.you` holds the viewer's `id, role (contestant|crowd|bye), status, forfeited, hill, isHost`. `view.match.prompt` is the
+prompt text. After any `state`/`snapshot`/`reveal`/`players`/`hostChanged`/`paused`/`resumed`, arm ONE timer for `nextDeadline`
+and send `advance {phaseId}` when it fires; `advance` for a stale or early phase is silently ignored (no reply).
+
+Secrets are never sent early: answer text only from the vote phase on, authors only at `reveal`, and a contestant never
+receives the opponent's answer before the vote.
+
+## Typical flows (all verified end to end against the deployed socket)
+
+- **Host (phone-only):** connect, `createRoom {name, mode:"phone"}`, store `roomCreated`, share `roomCode`, wait for joiners (`players`), `startGame`.
+- **Host with TV:** TV connects and sends `tvPair` (shows `pairCode`); phone sends `createRoom {name, mode:"tv", pairCode}`; TV gets `paired`.
+- **Player:** `joinRoom {roomCode, name}`, store `joined`.
+- **Reconnect:** open socket, send exactly one `rejoin {roomCode, playerId, token}` (TV: `tvRejoin`), render the `snapshot`.
+- **Gameplay:** render each `state`; contestants `submitAnswer`; the crowd `castVote`; tie contestants `chooseTieBreak`.
 
 ## Error codes
 
