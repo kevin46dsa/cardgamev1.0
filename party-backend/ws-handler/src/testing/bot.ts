@@ -13,7 +13,7 @@ export class Bot {
   acted = -1;
   read = 0;
   constructor(public w: World, public name: string, public isTv = false) {}
-  async open() { this.conn = await this.w.connect(); return this; }
+  async open() { this.conn = await this.w.connect(); this.w.owners.set(this.conn, this.name); return this; }
   send(body: object | string) { return this.w.send(this.conn, body); }
   inbox(): any[] { return this.w.sender.to(this.conn); }
   last(event: string): any { return [...this.inbox()].reverse().find((m) => m.event === event); }

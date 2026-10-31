@@ -65,6 +65,20 @@ export class Game {
     b.sync();
     return b;
   }
+  /** Socket dies (phone locked, tab closed). The bot stops acting until `rejoin`. */
+  async drop(b: Bot) {
+    this.down.add(b);
+    await this.w.drop(b.conn);
+  }
+  /** New socket, one `rejoin`, like the frontend does on reconnect. */
+  async rejoin(b: Bot) {
+    b.conn = await this.w.connect();
+    this.w.owners.set(b.conn, b.name);
+    b.read = 0;
+    this.down.delete(b);
+    await b.send(b.isTv ? { action: "tvRejoin", roomCode: b.roomCode, tvToken: b.tvToken } : { action: "rejoin", roomCode: b.roomCode, playerId: b.id, token: b.token });
+    b.sync();
+  }
   async start() {
     await (this.tv ?? this.host).send({ action: "startGame" });
     this.sync();

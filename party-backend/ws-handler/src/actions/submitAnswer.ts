@@ -26,7 +26,7 @@ export async function submitAnswer(ctx: Ctx, msg: { text?: unknown }): Promise<v
   const first = !before.some((a) => a.playerId === id);
   const body = { event: "submitted", contestantId: id } as const;
   if (first) {
-    const a = await audience(w.code);
+    const a = await audience(w.code, s);
     await Promise.all([...a.players.values(), ...(a.tv ? [a.tv] : [])].map((c) => ctx.send(c, body)));
   } else await ctx.send(ctx.connectionId, body);
   // If the other contestant already answered the count is 2; otherwise re-read (two answers can land at once).

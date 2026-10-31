@@ -19,7 +19,7 @@ export async function endGame(ctx: Ctx): Promise<void> {
   });
   if (!r) return;
   if (!flag.close) return announce(ctx, w.code, r.state, r.events);
-  const a = await audience(w.code);
+  const a = await audience(w.code, r.state);
   await endRoom(w.code);
   await Promise.all([...a.players.values(), ...(a.tv ? [a.tv] : [])].map((c) => ctx.send(c, { event: "roomEnded", reason: "host" })));
 }

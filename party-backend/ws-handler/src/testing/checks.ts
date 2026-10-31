@@ -20,7 +20,7 @@ export function checkRules(g: Game) {
     if (authorsOf(m)) expect(phase, "authors only at reveal").toBe("reveal");
     expect(l.bytes, `${m.event} is ${l.bytes} bytes`).toBeLessThan(4096);
     // Answer text of ANOTHER bot only inside vote / tiebreak / reveal views. (Own text: only via yourAnswer.)
-    const recipient = [...g.everyone].find((b) => b.conn === l.to)!;
+    const recipient = { name: g.w.owners.get(l.to)! };
     const body = JSON.stringify(m);
     for (const [text, author] of g.texts) {
       if (!body.includes(JSON.stringify(text).slice(1, -1))) continue;

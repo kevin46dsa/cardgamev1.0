@@ -5,6 +5,7 @@ import { Game } from "./testing/game";
 vi.mock("@party/shared/src/db", () => import("./testing/fakeDb"));
 
 const budget: string[] = [];
+const seen = new Set<string>();
 
 async function play(n: number, mode: "tv" | "phone", rounds: number, seed: number) {
   const g = new Game({ n, mode, rounds, seed });
@@ -14,6 +15,12 @@ async function play(n: number, mode: "tv" | "phone", rounds: number, seed: numbe
   checkEnd(g);
   checkRules(g);
   const matches = g.ref.view!.act >= 0 ? (await import("@party/shared/src/db").then((d) => d.getRoom<any>(g.host.roomCode))) : null;
+  for (const l of g.w.sender.log) {
+    const v = l.msg.view;
+    if (v?.phase === "tiebreak") seen.add("tiebreak");
+    if (v?.phase === "reveal") seen.add(`${v.match.result.outcome}/${v.match.result.reason}`);
+    if (v?.match?.replay) seen.add("replay");
+  }
   const total = g.w.sender.log.length;
   const mn = matches && matches.status === "active" ? matches.meta.matchNo : 0;
   budget.push(`${n} players, ${rounds} round(s), ${mode}: ${total} outbound messages, ${mn} matches (${(total / mn).toFixed(1)}/match), max frame ${Math.max(...g.w.sender.log.map((l) => l.bytes))} B`);
@@ -40,6 +47,21 @@ describe("full games through the public handler", () => {
     console.log(`MESSAGE BUDGET 10 players / 1 round / TV: ${total} outbound messages in ${mn} matches (${(total / mn).toFixed(1)} per match)`);
     expect(total).toBeLessThan(2500);
   });
+});
+
+test("the bots really hit ties, identical answers, defaults, replays and tiebreakers", () => {
+  for (const k of ["tiebreak", "replay", "win/votes", "win/default", "identical/identical", "win/tiebreaker"]) expect(seen, k).toContain(k);
+});
+
+test("the leak checks are not vacuous: a planted leak is caught", async () => {
+  const g = new Game({ n: 4, mode: "phone", seed: 2 });
+  await g.setup();
+  await g.toWrite();
+  const [a, b] = g.contestants;
+  expect(() => checkRules(g)).not.toThrow();
+  g.w.sender.log.push({ seq: 9999, to: b!.conn, bytes: 10, msg: { event: "state", serverNow: 1, nextDeadline: 1, view: { phase: "write", match: { note: "ans P1" } } } });
+  g.texts.set("ans P1", a!.name);
+  expect(() => checkRules(g)).toThrow(/leaked/);
 });
 
 test.runIf(process.env.PRINT_BUDGET)("print budget table", () => console.log(budget.join("\n")));

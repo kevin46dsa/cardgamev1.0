@@ -17,6 +17,6 @@ export async function tvRejoin(ctx: Ctx, msg: { roomCode?: unknown; tvToken?: un
   const s = await readRoom(ctx, code);
   if (!s) return;
   await sendSnapshot(ctx, ctx.connectionId, code, s, "tv");
-  const a = await audience(code);
+  const a = await audience(code, s);
   await Promise.all([...a.players.values()].map((c) => ctx.send(c, { event: "tvStatus", connected: true })));
 }
