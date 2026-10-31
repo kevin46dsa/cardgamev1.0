@@ -1,4 +1,5 @@
 import { mulberry32 } from "@party/shared/src/rules";
+import { makeCtx } from "../lib/makeCtx";
 import { Bot } from "./bot";
 import { createWorld, type World } from "./world";
 
@@ -20,6 +21,7 @@ export class Game {
   get host() { return this.bots[0]!; }
   get everyone(): Bot[] { return this.tv ? [this.tv, ...this.bots] : this.bots; }
   get ref(): Bot { return this.tv && !this.down.has(this.tv) ? this.tv : this.bots.find((b) => !this.down.has(b))!; }
+  ctx(b: Bot, ip = "1.1.1.1") { return makeCtx(this.w.sender, b.conn, ip, () => this.w.clock.t, this.w.rng); }
   get phase() { return this.ref.view!.phase; }
   get contestants(): Bot[] { return this.bots.filter((b) => this.ref.view!.match?.contestants.includes(b.id)); }
   get crowd(): Bot[] { return this.bots.filter((b) => !this.ref.view!.match?.contestants.includes(b.id)); }

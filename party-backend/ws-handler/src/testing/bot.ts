@@ -17,6 +17,8 @@ export class Bot {
   send(body: object | string) { return this.w.send(this.conn, body); }
   inbox(): any[] { return this.w.sender.to(this.conn); }
   last(event: string): any { return [...this.inbox()].reverse().find((m) => m.event === event); }
+  errors(): string[] { return this.inbox().filter((m) => m.event === "error").map((m) => m.code); }
+  events(): string[] { return this.inbox().map((m) => m.event); }
   // Reads new messages and updates view / credentials, like the real client would.
   sync(): void {
     const all = this.inbox();

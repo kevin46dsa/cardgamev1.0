@@ -9,6 +9,7 @@ export * from "@party/shared/src/db/keys";
 export type { Player, Tv };
 
 export const clock = { now: (): number => Date.now() };
+export { IDLE_TTL, ENDED_TTL, ITEM_TTL, PAIR_TTL } from "@party/shared/src/db/ttl";
 export const nowSec = () => Math.floor(clock.now() / 1000);
 export const ttlIn = (s: number) => nowSec() + s;
 export const calls = { n: 0 }; // rough DynamoDB-op counter for the cost report
@@ -45,7 +46,7 @@ export async function saveRoom(code: string, meta: unknown, expectedVersion: num
   return true;
 }
 export type RoomResult<T> = { ok: true; meta: T } | { error: string };
-export const hooks = { beforeSave: undefined as undefined | (() => void) }; // tests use this to force a version conflict
+export const hooks = { beforeSave: undefined as undefined | (() => void | Promise<void>) }; // tests use this to force a version conflict (or a crash)
 export async function withRoom<T>(code: string, fn: (meta: T) => T | { error: string }): Promise<RoomResult<T>> {
   for (let i = 0; i < 5; i++) {
     const room = await getRoom<T>(code);
@@ -53,7 +54,7 @@ export async function withRoom<T>(code: string, fn: (meta: T) => T | { error: st
     if (room.status === "ended") return { error: "ROOM_ENDED" };
     const next = fn(room.meta);
     if (next && typeof next === "object" && typeof (next as { error?: unknown }).error === "string") return next as { error: string };
-    const h = hooks.beforeSave; hooks.beforeSave = undefined; h?.();
+    await hooks.beforeSave?.();
     if (await saveRoom(code, next, room.version)) return { ok: true, meta: next as T };
   }
   return { error: "CONFLICT" };
