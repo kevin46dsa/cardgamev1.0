@@ -116,3 +116,9 @@ export function tieVotes(sim: Sim): void {
 }
 
 export const reveals = (sim: Sim) => sim.events.filter((e): e is Extract<EngineEvent, { type: "reveal" }> => e.type === "reveal");
+
+export function newGame(n: number, settings: Partial<Settings> = {}, seed = 1): Sim {
+  const sim = newSim(n, settings, seed);
+  start(sim);
+  return sim;
+}
