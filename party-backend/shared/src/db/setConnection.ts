@@ -10,8 +10,9 @@ export async function setConnection(code: string, playerId: string, connectionId
     await db().send(new UpdateCommand({
       TableName: table(),
       Key: { pk: roomPk(code), sk: playerSk(playerId) },
-      UpdateExpression: "SET connectionId = :c, online = :t REMOVE offlineSince",
+      UpdateExpression: "SET connectionId = :c, #o = :t REMOVE offlineSince",
       ConditionExpression: "attribute_exists(pk)",
+      ExpressionAttributeNames: { "#o": "online" },
       ExpressionAttributeValues: { ":c": connectionId, ":t": true },
     }));
     await putConnection(connectionId, code, playerId);

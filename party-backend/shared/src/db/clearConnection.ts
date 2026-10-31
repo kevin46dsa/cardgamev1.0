@@ -19,8 +19,9 @@ async function clear(code: string, playerId: string, connectionId: string, now: 
     await db().send(new UpdateCommand({
       TableName: table(),
       Key: { pk: roomPk(code), sk: playerSk(playerId) },
-      UpdateExpression: "SET online = :f, offlineSince = :now REMOVE connectionId",
+      UpdateExpression: "SET #o = :f, offlineSince = :now REMOVE connectionId",
       ConditionExpression: "connectionId = :c",
+      ExpressionAttributeNames: { "#o": "online" },
       ExpressionAttributeValues: { ":c": connectionId, ":f": false, ":now": now },
     }));
     return true;

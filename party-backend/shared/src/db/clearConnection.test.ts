@@ -10,7 +10,7 @@ test("removes connectionId only if it still matches, stamps offlineSince", async
   m.on(UpdateCommand).resolves({});
   expect(await clearConnection("KQXM", "p1", "c1", 99)).toBe(true);
   const i = m.commandCalls(UpdateCommand)[0]!.args[0].input;
-  expect(i.UpdateExpression).toBe("SET online = :f, offlineSince = :now REMOVE connectionId");
+  expect(i.UpdateExpression).toBe("SET #o = :f, offlineSince = :now REMOVE connectionId");
   expect(i.ConditionExpression).toBe("connectionId = :c");
   expect(i.ExpressionAttributeValues).toEqual({ ":c": "c1", ":f": false, ":now": 99 });
   expect(m.commandCalls(DeleteCommand)[0]!.args[0].input.Key).toEqual({ pk: "CONN#c1", sk: "CONN" });
