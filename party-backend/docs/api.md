@@ -41,7 +41,7 @@ on conflict. These are low-frequency. A room is capped at 10 players, so META st
 |---|---|---|---|
 | `ping` | any | none | `pong`. Exists today |
 | `tvPair` | TV | none | Returns `pairCode` (4 digits, 10 min) and waits. Re-issue on expiry |
-| `createRoom` | phone | name, mode `tv`/`phone`, pairCode?, settings | `roomCreated {roomCode, playerId, token}`; TV gets `paired`. `PAIR_INVALID`, `RATE_LIMITED` |
+| `createRoom` | phone | name, mode `tv`/`phone`, pairCode (required for `tv`), settings | `roomCreated {roomCode, playerId, token}`; TV gets `paired`. `PAIR_INVALID`, `RATE_LIMITED` |
 | `joinRoom` | phone | roomCode, name | `joined {playerId, token}` + `snapshot`. `ROOM_NOT_FOUND`, `ROOM_ENDED`, `ROOM_FULL`, `NAME_TAKEN`, `NAME_INVALID`, `NAME_BLOCKED`, `KICKED`, `FINALE_IN_PROGRESS` |
 | `rejoin` | phone | roomCode, playerId, token | `snapshot` (welcome back). Works any time before the Finale for anyone who dropped or left (not for kicked players). Settles any overdue deadline first. `TOKEN_INVALID`, `ROOM_ENDED`, `KICKED` |
 | `tvRejoin` | TV | roomCode, tvToken | `snapshot` for TV |

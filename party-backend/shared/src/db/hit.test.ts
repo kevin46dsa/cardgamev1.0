@@ -1,7 +1,7 @@
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { beforeEach, expect, test } from "vitest";
-import { hit } from "./hit";
+import { hit, peekHits } from "./hit";
 
 const m = mockClient(DynamoDBDocumentClient);
 beforeEach(() => m.reset());
@@ -20,4 +20,13 @@ test("allowed up to the limit, denied just past it", async () => {
   m.on(UpdateCommand).resolvesOnce({ Attributes: { count: 10 } }).resolvesOnce({ Attributes: { count: 11 } });
   expect((await hit("k", 1, 10)).allowed).toBe(true);
   expect(await hit("k", 1, 10)).toEqual({ allowed: false, count: 11 });
+});
+
+test("peekHits reads the current window bucket without writing; 0 when absent", async () => {
+  m.on(GetCommand).resolvesOnce({ Item: { count: 7 } }).resolvesOnce({});
+  expect(await peekHits("ip:9", 600)).toBe(7);
+  expect(await peekHits("ip:9", 600)).toBe(0);
+  const key = m.commandCalls(GetCommand)[0]!.args[0].input.Key!;
+  expect(key).toEqual({ pk: "RATE#ip:9", sk: String(Math.floor(Date.now() / 1000 / 600)) });
+  expect(m.commandCalls(UpdateCommand)).toHaveLength(0);
 });

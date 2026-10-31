@@ -1,4 +1,4 @@
-import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { db, table } from "./client";
 import { ratePk } from "./keys";
 import { nowSec } from "./ttl";
@@ -18,4 +18,13 @@ export async function hit(key: string, windowSeconds: number, limit: number): Pr
   }));
   const count = Attributes?.count as number;
   return { allowed: count <= limit, count };
+}
+
+/** Current-window count for `key` without counting a hit (0 when nothing was recorded). */
+export async function peekHits(key: string, windowSeconds: number): Promise<number> {
+  const { Item } = await db().send(new GetCommand({
+    TableName: table(),
+    Key: { pk: ratePk(key), sk: String(Math.floor(nowSec() / windowSeconds)) },
+  }));
+  return (Item?.count as number | undefined) ?? 0;
 }
