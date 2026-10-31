@@ -7,6 +7,7 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import * as path from "path";
 import { createPartyGamesTable } from "./tables/createPartyGamesTable";
+import { createGithubDeployRole } from "./ci/createGithubDeployRole";
 
 const WS_DOMAIN = "gamenight-ws.nosenterprise.org";
 
@@ -15,6 +16,7 @@ export class PartyGamesBackendStack extends cdk.Stack {
     super(scope, id, props);
 
     const table = createPartyGamesTable(this);
+    createGithubDeployRole(this);
 
     const fn = new NodejsFunction(this, "WsHandler", {
       entry: path.join(__dirname, "../../ws-handler/src/handler.ts"),
