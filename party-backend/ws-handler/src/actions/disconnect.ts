@@ -1,4 +1,4 @@
-import { clearConnection, findByConnection, getRoom, getTv, putTv } from "@party/shared/src/db";
+import { clearConnection, clearTvConnection, findByConnection, getRoom } from "@party/shared/src/db";
 import { markOffline, type GameState } from "@party/shared/src/rules";
 import { audience } from "../lib/audience";
 import type { Ctx } from "../lib/ctx";
@@ -14,9 +14,7 @@ export async function disconnect(ctx: Ctx, connectionId = ctx.connectionId): Pro
   const w = await findByConnection(connectionId);
   if (!w) return;
   if (w.playerId === null) {
-    const tv = await getTv(w.code);
-    if (tv?.connectionId !== connectionId) return; // TV already reconnected on a newer socket
-    await putTv(w.code, { tvTokenHash: tv.tvTokenHash }); // ponytail: not atomic with a tvRejoin in the same ms; the CONN# item expires by ttl
+    if (!(await clearTvConnection(w.code, connectionId))) return; // TV already reconnected on a newer socket
     const room = await getRoom<GameState>(w.code);
     const a = await audience(w.code, room?.status === "active" ? room.meta : undefined);
     await Promise.all([...a.players.values()].map((c) => ctx.send(c, { event: "tvStatus", connected: false })));

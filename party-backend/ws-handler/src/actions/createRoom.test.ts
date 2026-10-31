@@ -47,6 +47,7 @@ test.each([
   [{ name: 7, mode: "phone" }, "NAME_INVALID"],
   [{ name: "fuck", mode: "phone" }, "NAME_BLOCKED"],
   [{ name: "Ann", mode: "both" }, "BAD_REQUEST"],
+  [{ name: "Ann", mode: "tv" }, "PAIR_INVALID"],
   [{ name: "Ann", mode: "tv", pairCode: "12" }, "PAIR_INVALID"],
   [{ name: "Ann", mode: "tv", pairCode: "0000" }, "PAIR_INVALID"],
   [{ name: "Ann", mode: "phone", settings: { rounds: 9 } }, "BAD_REQUEST"],

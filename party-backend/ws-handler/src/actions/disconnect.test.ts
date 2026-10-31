@@ -72,6 +72,22 @@ test("TV socket dropping tells the phones; unknown sockets are ignored", async (
   for (const b of g.bots) expect(b.last("tvStatus")).toMatchObject({ connected: false });
 });
 
+test("an old TV socket closing late does not wipe the TV that already reconnected", async () => {
+  const g = new Game({ n: 2, mode: "tv" });
+  await g.setup();
+  const old = g.tv!;
+  const tvToken = (await db.getTv(g.host.roomCode))!.tvTokenHash;
+  const nt = await new Bot(g.w, "TV2", true).open();
+  await db.setTvConnection(g.host.roomCode, nt.conn);
+  await g.w.drop(old.conn);
+  expect((await db.getTv(g.host.roomCode))!.connectionId).toBe(nt.conn);
+  expect((await db.getTv(g.host.roomCode))!.tvTokenHash).toBe(tvToken);
+  expect(g.host.events()).not.toContain("tvStatus");
+  await g.w.drop(nt.conn);
+  expect((await db.getTv(g.host.roomCode))!.connectionId).toBeUndefined();
+  expect(g.host.last("tvStatus")).toMatchObject({ connected: false });
+});
+
 test("everybody dropping from a running 3-player game pauses, and the pause ends in the lobby after 60 s", async () => {
   const g = new Game({ n: 3, mode: "phone" });
   await g.setup();

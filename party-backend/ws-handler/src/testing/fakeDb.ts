@@ -98,6 +98,14 @@ export async function getTv(code: string): Promise<Tv | null> {
   const i = get(pk(code), "TV");
   return i ? (strip(structuredClone(i)) as Tv) : null;
 }
+export async function clearTvConnection(code: string, connectionId: string): Promise<boolean> {
+  const i = get(pk(code), "TV");
+  items.delete(k(`CONN#${connectionId}`, "CONN"));
+  if (!i || i.connectionId !== connectionId) return false;
+  const { connectionId: _c, ...rest } = i;
+  put(pk(code), "TV", rest);
+  return true;
+}
 export async function setTvConnection(code: string, connectionId: string): Promise<boolean> {
   const i = get(pk(code), "TV");
   if (!i) return false;
@@ -147,4 +155,8 @@ export async function hit(key: string, windowSeconds: number, limit: number): Pr
   const count = (counters.get(id) ?? 0) + 1;
   counters.set(id, count);
   return { allowed: count <= limit, count };
+}
+export async function peekHits(key: string, windowSeconds: number): Promise<number> {
+  calls.n++;
+  return counters.get(`${key}|${Math.floor(nowSec() / windowSeconds)}`) ?? 0;
 }

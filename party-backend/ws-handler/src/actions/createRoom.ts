@@ -16,6 +16,7 @@ export async function createRoom(ctx: Ctx, msg: { name?: unknown; mode?: unknown
   if (msg.mode !== "tv" && msg.mode !== "phone") return void (await fail(ctx, "BAD_REQUEST", "mode must be tv or phone"));
   if (!name || name.length > 12) return void (await fail(ctx, "NAME_INVALID"));
   if (isBlocked(name)) return void (await fail(ctx, "NAME_BLOCKED"));
+  if (msg.mode === "tv" && msg.pairCode == null) return void (await fail(ctx, "PAIR_INVALID", "tv mode needs the pairCode shown on the TV"));
   const pair = msg.mode === "tv" && msg.pairCode != null ? String(msg.pairCode) : undefined;
   if (pair !== undefined && !/^\d{4}$/.test(pair)) return void (await fail(ctx, "PAIR_INVALID"));
 

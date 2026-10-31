@@ -2,6 +2,7 @@
 export * from "./bindPairCode";
 export * from "./clearConnection";
 export * from "./clearLeftovers";
+export * from "./clearTvConnection";
 export * from "./client";
 export * from "./createPairCode";
 export * from "./createRoom";
