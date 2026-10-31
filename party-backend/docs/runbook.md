@@ -100,7 +100,7 @@ stack is redeployed by hand (the role is gone). Stopping spend without destroyin
 - **Frames are limited to 2 KB** (inbound frames above are rejected; sender warns above 2 KB). A full 10-player `state` is about 2.2 KB.
 - Inbound rate limit 10 msgs/s per connection; room cap 10 players; at most 5 optimistic-lock retries per action ("room is busy, try again").
 - API Gateway: 10 min idle timeout, 2 h max connection. Only lobby, pause and TV pairing screens need a ping (every 5 min).
-- DynamoDB TTL deletion is lazy (up to about 48 h late); code reads of expired rooms must not rely on it (the handler checks expiry itself).
+- DynamoDB TTL deletion is lazy (up to about 48 h late) (a room may linger after its TTL).
 
 ## 7. Incident checklist
 
@@ -126,7 +126,7 @@ stack is redeployed by hand (the role is gone). Stopping spend without destroyin
    `aws cloudformation continue-update-rollback --stack-name PartyGamesBackendStack --region us-east-2`.
 
 **Past bug to remember: DynamoDB reserved words.** `online` is a reserved word; using it bare in an UpdateExpression returned
-`ValidationException` from the real service while every mock-based test passed, so the first live deploy failed joins. Fixed by aliasing
+`ValidationException` from the real service while every mock-based test passed, so it only surfaced against the live table. Fixed by aliasing
 (`#o` via ExpressionAttributeNames in `setConnection.ts` and `clearConnection.ts`). Guard: `shared/src/db/reservedWords.test.ts` scans
 every db expression for 16 reserved words used unaliased; `npm run smoke` exercises the real table after every deploy. Add new reserved words to that list when found.
 
