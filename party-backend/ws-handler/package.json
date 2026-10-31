@@ -1,6 +1,19 @@
 {
-  "name": "@party/ws-handler", "version": "0.0.0", "private": true,
-  "scripts": { "typecheck": "tsc -p .", "test": "vitest run" },
-  "dependencies": { "@aws-sdk/client-apigatewaymanagementapi": "^3.700.0", "@party/shared": "*" },
-  "devDependencies": { "@types/aws-lambda": "^8.10.145", "@types/node": "^22.10.1", "vitest": "^4.1.11" }
+  "name": "@party/ws-handler",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.700.0",
+    "@party/shared": "*",
+    "obscenity": "^0.4.6"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.145",
+    "@types/node": "^22.10.1",
+    "vitest": "^4.1.11"
+  }
 }
