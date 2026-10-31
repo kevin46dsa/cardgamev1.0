@@ -39,7 +39,7 @@ test("20 wrong guesses from one IP block every guessing action (even correct one
   expect(b.events().slice(-2)).toEqual(["joined", "snapshot"]);
 });
 
-test("successful joins never count as misses; the block lifts in the next 10-minute window", async () => {
+test("rejoin and room-code misses share one counter; the block lifts in the next 10-minute window", async () => {
   const g = new Game({ n: 1, mode: "phone" });
   await g.setup();
   for (let i = 0; i < 25; i++) {

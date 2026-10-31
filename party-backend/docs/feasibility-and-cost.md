@@ -78,10 +78,10 @@ the 10-concurrency Lambda limit a real problem.
 
 The WSS URL is public and so is this repo. Planned guardrails (ticket: Safety + abuse):
 
-- API Gateway stage throttle (already set to 100 rps / 200 burst; lower it to something like 30 / 60).
+- API Gateway stage throttle (set to 30 rps / 60 burst).
 - Per-connection message limit inside the Lambda (counter on the player item; drop and warn above about 10 msgs/s).
 - `createRoom` limited per source IP (counter item with TTL, about 10 rooms per hour).
-- Pairing-code and room-code guessing limited per connection (4 letters without O/I is only 24^4 = 331k codes).
+- Done: wrong room codes, tokens and pairing codes are limited to 20 per 10 minutes per source IP (`RATE_LIMITED`), and `tvPair` to 20 codes per 10 minutes per IP. Original note: pairing-code and room-code guessing limited per connection (4 letters without O/I is only 24^4 = 331k codes).
 - Reject any inbound frame over 2 KB (answers are 60 characters).
 - Reserved Lambda concurrency as a hard ceiling once the account limit is raised.
 - You already have a "Zero-Spend" $1 AWS Budget alert. Keep it. No WAF (about $5 per month minimum, wrong tool here).
