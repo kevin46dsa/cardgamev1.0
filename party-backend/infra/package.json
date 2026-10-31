@@ -1,0 +1,6 @@
+{
+  "name": "@party/infra", "version": "0.0.0", "private": true,
+  "scripts": { "typecheck": "tsc -p .", "synth": "cdk synth", "cdk": "cdk" },
+  "dependencies": { "aws-cdk-lib": "^2.164.1", "constructs": "^10.4.2" },
+  "devDependencies": { "@types/node": "^22.10.1", "aws-cdk": "^2.164.1", "esbuild": "^0.25.0", "ts-node": "^10.9.2" }
+}

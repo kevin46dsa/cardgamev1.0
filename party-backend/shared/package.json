@@ -1,0 +1,2 @@
+{ "name": "@party/shared", "version": "0.0.0", "private": true, "main": "src/protocol.ts",
+  "scripts": { "typecheck": "tsc -p ." } }
