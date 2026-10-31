@@ -1,7 +1,7 @@
 // Full-game simulation over the LIVE socket. `node scripts/sim/sim.mjs [--players 3,5] [--odd champion,comeback] [--tv] [--seed N]`
 // Plays one game per configuration, strictly sequentially (the account's Lambda concurrency limit is 10), checks invariants,
 // prints a table and exits non-zero if any invariant failed. Default: players 3..10, both oddPlayerStart settings for odd counts,
-// plus one TV-mode game (4 players).
+// plus one TV-mode game (4 players). WS_URL=ws://localhost:8787 targets the local server; --parallel N (local only).
 import { Bot, FAST_SETTINGS, WS_URL, endRoom, joinAll, rng, sleep } from "./bot.mjs";
 
 const arg = (name, dflt) => {
@@ -10,6 +10,9 @@ const arg = (name, dflt) => {
 };
 const PLAYER_COUNTS = (arg("players", "3,4,5,6,7,8,9,10")).split(",").map(Number);
 const ODD_STARTS = arg("odd", "champion,comeback").split(",");
+const LIVE = WS_URL.includes("nosenterprise.org");
+const PARALLEL = Number(arg("parallel", "1"));
+if (LIVE && PARALLEL > 1) { console.error("refusing --parallel against the live backend (Lambda concurrency limit 10, createRoom 10/hour/IP)"); process.exit(2); }
 const SEED = Number(arg("seed", "1"));
 const GAME_TIMEOUT_MS = 15 * 60_000;
 const FRAMES_PER_PLAYER_PER_MATCH_BUDGET = 14; // observed ~8-10; fail well above
@@ -81,13 +84,14 @@ async function playGame(cfg, idx) {
     host.start();
     await Promise.all([...bots, ...(tv ? [tv] : [])].map((b) => b.waitPhase("final", GAME_TIMEOUT_MS)));
     const res = verify(bots, tv, cfg);
+    const king = host.view.players.find((p) => p.id === host.view.king)?.name;
     await sleep(300);
     // cleanup: end game (-> lobby), end again (closes the room), everyone must be told
     host.send({ action: "endGame" });
     await host.waitPhase("lobby", 8000);
     host.send({ action: "endGame" });
     await Promise.all(bots.map((b) => b.waitEvent("roomEnded", 8000)));
-    return { cfg, ok: res.bad.length === 0, ...res, secs: Math.round((Date.now() - t0) / 1000), roomCode, king: host.view.players.find((p) => p.id === host.view.king)?.name };
+    return { cfg, ok: res.bad.length === 0, ...res, secs: Math.round((Date.now() - t0) / 1000), roomCode, king };
   } catch (e) {
     return { cfg, ok: false, bad: [e.message], matches: [...host.matches].length, frames: 0, bytes: 0, secs: Math.round((Date.now() - t0) / 1000) };
   } finally {
@@ -96,14 +100,19 @@ async function playGame(cfg, idx) {
 }
 
 console.log(`sim against ${WS_URL}, seed ${SEED}, ${configs.length} games, sequential`);
-const rows = [];
-for (const [i, cfg] of configs.entries()) {
-  process.stdout.write(`> ${cfg.n} players, odd=${cfg.odd}, ${cfg.mode} ... `);
-  const r = await playGame(cfg, i);
-  console.log(r.ok ? `ok (${r.secs}s)` : `FAIL ${r.bad.slice(0, 3).join(" | ")}`);
-  rows.push(r);
-  await sleep(1000);
+const rows = new Array(configs.length);
+let next = 0;
+async function worker() {
+  while (next < configs.length) {
+    const i = next++;
+    const cfg = configs[i];
+    const r = await playGame(cfg, i);
+    console.log(`> ${cfg.n} players, odd=${cfg.odd}, ${cfg.mode}: ${r.ok ? `ok (${r.secs}s)` : `FAIL ${r.bad.slice(0, 3).join(" | ")}`}`);
+    rows[i] = r;
+    if (LIVE) await sleep(1000);
+  }
 }
+await Promise.all(Array.from({ length: Math.max(1, PARALLEL) }, worker));
 const pad = (s, n) => String(s).padEnd(n);
 console.log("\n" + ["players", "odd", "mode", "matches", "frames", "KB", "secs", "king", "result"].map((h, i) => pad(h, [8, 10, 6, 8, 7, 6, 6, 14, 6][i])).join(""));
 for (const r of rows) console.log([r.cfg.n, r.cfg.odd, r.cfg.mode, r.matches, r.frames, (r.bytes / 1024).toFixed(0), r.secs, r.king ?? "-", r.ok ? "PASS" : "FAIL"].map((c, i) => pad(c, [8, 10, 6, 8, 7, 6, 6, 14, 6][i])).join(""));

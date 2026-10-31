@@ -1,12 +1,19 @@
 {
   "name": "party-backend",
   "private": true,
-  "workspaces": ["shared", "ws-handler", "infra"],
+  "workspaces": [
+    "shared",
+    "ws-handler",
+    "infra"
+  ],
   "scripts": {
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "synth": "npm run synth -w infra",
     "smoke": "node scripts/smoke/smoke.mjs"
   },
-  "devDependencies": { "typescript": "^5.6.3" }
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "ws": "^8.22.1"
+  }
 }
