@@ -1,0 +1,115 @@
+/* Funniest Answer party UI. Colours follow the Figma "Quiplash Game" frames. */
+.party {
+  --p-bg: #1e1b4b;
+  --p-surface: #312e81;
+  --p-surface-2: #4338ca;
+  --p-accent: #fde68a;
+  --p-accent-text: #78350f;
+  --p-cyan: #22d3ee;
+  --p-text: #ffffff;
+  --p-muted: #c7d2fe;
+  --p-danger: #fecaca;
+  --p-danger-bg: #7f1d1d;
+  --p-focus: #60a5fa;
+  --p-tap: 48px;
+  --p-radius: 16px;
+  --p-gap: 16px;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--p-bg);
+  color: var(--p-text);
+  font-family: var(--font-family, system-ui, sans-serif);
+  display: flex;
+  flex-direction: column;
+}
+.party *, .party *::before, .party *::after { box-sizing: border-box; }
+.party h1, .party h2, .party h3, .party p { margin: 0; }
+.party :focus-visible { outline: 3px solid var(--p-focus); outline-offset: 2px; }
+.party-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Buttons and fields */
+.party-btn {
+  min-height: var(--p-tap); padding: 12px 20px; border-radius: 14px; border: 2px solid transparent;
+  font: inherit; font-weight: 700; font-size: 1.05rem; cursor: pointer;
+  background: var(--p-accent); color: var(--p-accent-text);
+}
+.party-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.party-btn--ghost { background: transparent; color: var(--p-text); border-color: var(--p-muted); }
+.party-btn--danger { background: var(--p-danger-bg); color: var(--p-danger); }
+.party-btn--small { min-height: var(--p-tap); padding: 8px 14px; font-size: 0.95rem; }
+.party-field { display: flex; flex-direction: column; gap: 6px; }
+.party-field label, .party-field legend { color: var(--p-muted); font-weight: 600; }
+.party-input {
+  min-height: 56px; padding: 12px 16px; border-radius: 14px; border: 2px solid var(--p-surface-2);
+  background: var(--p-surface); color: var(--p-text); font: inherit; font-size: 1.1rem; width: 100%;
+}
+.party-input::placeholder { color: var(--p-muted); opacity: 0.8; }
+textarea.party-input { min-height: 140px; resize: vertical; }
+.party-hint { color: var(--p-muted); font-size: 0.95rem; }
+.party-title { color: var(--p-accent); font-size: 1.8rem; font-weight: 800; }
+.party-card { background: var(--p-surface); border-radius: var(--p-radius); padding: 20px; }
+.party-row { display: flex; gap: var(--p-gap); align-items: center; flex-wrap: wrap; }
+
+/* Banners */
+.party-banner { padding: 12px 16px; font-weight: 600; text-align: center; }
+.party-banner--error { background: var(--p-danger-bg); color: var(--p-danger); display: flex; gap: 12px; justify-content: center; align-items: center; }
+.party-banner--info { background: var(--p-surface-2); color: var(--p-text); }
+
+/* Phone layout */
+.party-phone { max-width: 480px; width: 100%; margin: 0 auto; flex: 1; display: flex; flex-direction: column; }
+.party-phone__body { flex: 1; padding: 24px 16px 32px; display: flex; flex-direction: column; gap: var(--p-gap); }
+.party-center { align-items: center; justify-content: center; text-align: center; flex: 1; }
+
+/* Roster */
+.party-roster { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.party-chip { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--p-surface); border-radius: 999px; font-weight: 700; min-height: var(--p-tap); }
+.party-chip--offline { opacity: 0.6; }
+.party-chip__name { flex: 1; overflow-wrap: anywhere; }
+.party-avatar { width: 28px; height: 28px; border-radius: 50%; flex: none; }
+.party-avatar--lg { width: 96px; height: 96px; }
+.party-tag { font-size: 0.8rem; color: var(--p-muted); font-weight: 600; }
+
+/* Match */
+.party-kind { color: var(--p-cyan); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.party-prompt { background: var(--p-surface); border-radius: var(--p-radius); padding: 24px; font-size: 1.5rem; font-weight: 800; text-align: center; }
+.party-timer { font-variant-numeric: tabular-nums; font-weight: 800; color: var(--p-accent); }
+.party-answers { display: grid; gap: var(--p-gap); }
+.party-answer {
+  display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; text-align: center;
+  min-height: 120px; padding: 20px; border-radius: var(--p-radius); border: 3px solid var(--p-surface-2); background: var(--p-surface);
+  color: var(--p-text); font: inherit; font-size: 1.4rem; font-weight: 800; width: 100%;
+}
+button.party-answer { cursor: pointer; }
+.party-answer[aria-pressed="true"], .party-answer--winner { border-color: var(--p-accent); background: var(--p-surface-2); }
+.party-answer__side { color: var(--p-accent); font-size: 1rem; }
+.party-answer__meta { font-size: 1rem; font-weight: 600; color: var(--p-muted); }
+
+/* Boards */
+.party-board { display: grid; gap: var(--p-gap); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.party-board h3 { color: var(--p-accent); margin-bottom: 8px; }
+.party-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.party-bracket li { padding: 12px 16px; border-radius: 12px; background: var(--p-surface); font-weight: 700; }
+.party-bracket li.is-champion { background: var(--p-accent); color: var(--p-accent-text); }
+
+/* TV layout (designed for 1920x1080, scales with the viewport) */
+.party-tv { padding: clamp(24px, 5vw, 96px); gap: clamp(16px, 2.5vw, 40px); font-size: clamp(16px, 1.6vw, 30px); justify-content: center; }
+.party-tv .party-title { font-size: 2.2em; }
+.party-tv .party-prompt { font-size: 2.2em; padding: 1em; }
+.party-tv .party-answer { font-size: 2em; min-height: 200px; }
+.party-tv .party-chip { font-size: 1.1em; }
+.party-tv .party-avatar { width: 1.6em; height: 1.6em; }
+.party-tv .party-btn { font-size: 1.2em; padding: 0.6em 1.4em; }
+.party-code { font-size: 5em; font-weight: 900; letter-spacing: 0.15em; text-align: center; }
+.party-tv__split { display: grid; gap: 2em; grid-template-columns: minmax(260px, 1fr) 2fr; align-items: start; }
+.party-king { text-align: center; }
+.party-king__name { font-size: 4em; font-weight: 900; color: var(--p-accent); overflow-wrap: anywhere; }
+@media (max-width: 800px) { .party-tv__split { grid-template-columns: 1fr; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .party-btn, .party-answer { transition: transform 0.12s ease, background-color 0.2s ease; }
+  .party-btn:active:not(:disabled) { transform: scale(0.98); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .party * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
