@@ -96,3 +96,23 @@ These map one-to-one onto the error screens already in Figma rows A to F.
 - Lower stage throttle from 100/200 to about 30/60.
 - Request the Lambda concurrency quota increase (account limit is 10).
 - Add a `PartyGamesTable` TTL tombstone convention (ENDED META kept 24 hours).
+
+## Screen-to-API mapping (pre-build review, 2026-10-31)
+
+Every Figma screen needs these fields from the server. Added after cross-checking all frames against this plan.
+
+- **Match kind** on every `phase`/`snapshot`: `preliminary | hill | valley | fateDecider | lastChance | finale`, plus
+  `stakes: true/false` (false only for the fate decider's side, so the screen can say "playing for fun").
+- **Player role** per recipient: `contestant | crowd | bye` (Act 1 odd player), `sitsOut` (odd player in a hill), `valley`,
+  `fateDecider`, `lastChance`. Drives screens C3, C8, C9, C10, E1, E2.
+- **Tie flow:** `reveal.outcome` can be `win | tie | identical | forfeit`. `tie` opens a `tiebreak` phase (about 8s) and
+  the screens D6/D8 (phone) and G6 (TV). `identical` (Great minds, D5) skips the choice and goes straight to Reprompt.
+  A tie that no one answers resolves to Revote.
+- **Rejoin snapshot flags:** `status: returning` (welcome back, will rejoin `hill` at the next round), `forfeited: true`
+  (F7), `kicked` handled by the `kicked` event.
+- **Waiting banner (TV G5, phone F-row):** `players` roster entries carry `offlineSince` and `graceEndsAt`
+  (15s contestant grace) so screens can show "12 seconds, then Maya wins by default" from a deadline.
+- **Settings payload:** `writeSecs, voteSecs, profanity, rounds (1 to 3), oddPlayerStart`; the lobby also needs an
+  `estimatedMinutes` hint (about 25 / 35 / 44 for 10 players at 1 / 2 / 3 rounds).
+- **Live vote count** (`voteCount`) is sent only to the TV and only in TV mode (TV 3 shows "6 of 8 crowd votes in").
+- **Finale bracket:** `hills` event includes the finale tree and the Last Chance pairing when it happens.
