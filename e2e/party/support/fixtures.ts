@@ -48,6 +48,7 @@ export class Party {
     const { page, ctx } = await this.newScreen("tv", "tv");
     const tv = new Tv(page, ctx, "TV");
     this.screens.push(tv);
+    await tv.routeSockets();
     await tv.open();
     return tv;
   }
@@ -57,6 +58,7 @@ export class Party {
     const { page, ctx } = await this.newScreen("phone", `phone-${name}`);
     const phone = new Phone(page, ctx, name, name);
     this.screens.push(phone);
+    await phone.routeSockets();
     await phone.open(url);
     return phone;
   }
@@ -95,7 +97,7 @@ export class Party {
   /** Photograph this screen once per distinct (kind, mode, phase, role) in the whole run. */
   async catalog(screen: Tv | Phone, mode: "tv" | "phone", state: { phase: string | null; roleTitle: string | null; headings: string[] }): Promise<void> {
     const kind = screen instanceof Tv ? "tv" : "phone";
-    const key = [kind, mode, state.phase ?? "none", state.roleTitle ? slug(state.roleTitle) : "plain"].join("-");
+    const key = [kind, `${mode}mode`, state.phase ?? "none", state.roleTitle ? slug(state.roleTitle) : "plain"].join("-");
     if (photographed.has(key)) return;
     photographed.add(key);
     await this.shot(screen, key);

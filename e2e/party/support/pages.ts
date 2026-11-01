@@ -1,4 +1,4 @@
-import { expect, type BrowserContext, type Locator, type Page } from "@playwright/test";
+import { expect, type BrowserContext, type Locator, type Page, type WebSocketRoute } from "@playwright/test";
 import { COPY, PHASE_BY_TEXT, ROUTES, TIMEOUT, type Phase } from "./constants";
 
 /** What a player screen looks like right now, read in one round trip. */
@@ -6,6 +6,7 @@ export interface ScreenState {
   phase: Phase | null;
   headings: string[];
   text: string;
+  prompt: string | null;
   /** a role card ("You get a bye", "Last Chance"...) when one is shown */
   roleTitle: string | null;
   canWrite: boolean;
@@ -29,9 +30,10 @@ const READ_SCREEN = () => {
     announcer: announcer?.textContent?.trim() ?? "",
     headings: [...document.querySelectorAll("h1,h2")].map((h) => h.textContent?.trim() ?? ""),
     text: document.body.innerText,
+    prompt: document.querySelector(".party-prompt")?.textContent ?? null,
     roleTitle: document.querySelector('[aria-label="Your role"] h2')?.textContent?.trim() ?? null,
     canWrite: !!document.querySelector("#party-answer"),
-    canSubmit: !!submit && !submit.disabled && submit.textContent !== "Answer locked in",
+    canSubmit: !!submit && submit.textContent !== "Answer locked in", // true until this answer is sent
     voteButtons: vote.length,
     votePressed: vote.some((b) => b.getAttribute("aria-pressed") === "true"),
     tieButtons: tie.length,
@@ -41,8 +43,32 @@ const READ_SCREEN = () => {
   };
 };
 
+/** Pass-through websocket proxy so a test can cut the connection without touching the app. */
+export class SocketControl {
+  private current: WebSocketRoute | null = null;
+  blocked = false;
+  async install(page: Page): Promise<void> {
+    const wsUrl = new URL((process.env.WS_URL ?? "ws://localhost:8787").replace(/^ws/, "http"));
+    await page.routeWebSocket((u) => u.host === wsUrl.host, (ws) => {
+      if (this.blocked) { void ws.close(); return; }
+      ws.connectToServer();
+      this.current = ws;
+    });
+  }
+  /** Cut the live socket now. With `stayDown` the app cannot reconnect until allow() is called. */
+  async drop({ stayDown = false }: { stayDown?: boolean } = {}): Promise<void> {
+    this.blocked = stayDown;
+    await this.current?.close({ code: 1006, reason: "test: connection lost" });
+    this.current = null;
+  }
+  allow(): void { this.blocked = false; }
+}
+
 abstract class Screen {
-  constructor(readonly page: Page, readonly context: BrowserContext, readonly label: string) {}
+  constructor(public page: Page, readonly context: BrowserContext, readonly label: string) {}
+  /** Controls the page's websocket: drop it (simulates a lost connection) and optionally refuse reconnects. */
+  readonly net = new SocketControl();
+  async routeSockets(): Promise<void> { await this.net.install(this.page); }
 
   /** Visually hidden live region the app updates on every phase change. */
   get announcer(): Locator { return this.page.locator("main > .party-sr"); }
@@ -151,6 +177,26 @@ export class Phone extends Screen {
   }
 
   async isHost(): Promise<boolean> { return this.startButton.isVisible(); }
+
+  /** Close the tab (phone died / tab closed). The stored session stays in localStorage. */
+  async closeTab(): Promise<void> { await this.page.close(); }
+  /** Open a fresh tab in the same browser profile: the app restores the seat with `rejoin`. */
+  async reopen(): Promise<void> {
+    if (!this.page.isClosed()) await this.page.close();
+    this.page = await this.context.newPage();
+    await this.routeSockets();
+    await this.page.goto(ROUTES.phone);
+  }
+
+  /** Type and submit an answer by hand (the write screen must be showing). */
+  async submitAnswer(text: string): Promise<void> {
+    await this.page.locator("#party-answer").fill(text);
+    await this.page.getByRole("button", { name: /^(Submit|Update answer)$/ }).click();
+    await expect(this.page.getByRole("button", { name: "Answer locked in" })).toBeVisible();
+  }
+  async vote(side: "A" | "B"): Promise<void> {
+    await this.page.locator("button.party-answer").filter({ has: this.page.locator(".party-answer__side", { hasText: new RegExp(`^${side}$`) }) }).click();
+  }
 
   async session() { return this.storedSession("party.session"); }
 
