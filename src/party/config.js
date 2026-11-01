@@ -12,7 +12,9 @@ export const BACKOFF_MS = [1, 2, 4, 8, 16, 30].map((s) => s * SECOND);
 /** After this long without a connection we stop retrying and offer "Try again". */
 export const GIVE_UP_AFTER_MS = 2 * 60 * SECOND;
 /** Idle screens ping this often so the room and socket stay alive. */
-export const PING_INTERVAL_MS = 5 * 60 * SECOND;
+export const PING_INTERVAL_MS = 25 * SECOND;
+/** No frame (incl. pong) for this long on an "open" socket => treat it as dead and rejoin. */
+export const STALE_AFTER_MS = 60 * SECOND;
 /** Non-driver phones wait this long past a deadline before sending `advance`. */
 export const ADVANCE_FALLBACK_MS = 3 * SECOND;
 /** Safety margin so a slightly-off clock offset never sends `advance` before the server deadline (early calls are silently dropped). */
