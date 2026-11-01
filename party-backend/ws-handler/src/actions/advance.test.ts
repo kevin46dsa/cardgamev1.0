@@ -21,7 +21,7 @@ test("deadline passed: the phase moves and everyone gets their `state`", async (
   g.sync();
   expect(g.phase).toBe("write");
   expect(g.host.view!.phase).toBe("write");
-  expect(g.tv!.nd).toBe(g.tv!.view!.endsAt);
+  expect(g.tv!.nd).toBeNull(); // write has no timer
 });
 
 test("too early and stale are SILENT: no frames, no database write", async () => {
@@ -58,11 +58,12 @@ test("bad phaseId -> BAD_REQUEST; unbound socket -> TOKEN_INVALID", async () => 
   expect(s.errors()).toEqual(["TOKEN_INVALID"]);
 });
 
-test("a write phase nobody answered ends on the deadline (blank tie -> forced reprompt)", async () => {
+test("a write phase nobody answers never ends on its own (no timer)", async () => {
   const g = await started();
   await g.tick();
   expect(g.phase).toBe("write");
-  await g.tick();
-  expect(g.phase).toBe("reveal");
-  expect(g.host.view!.match!.result).toMatchObject({ outcome: "tie", reason: "blank" });
+  g.w.clock.t += 60 * 60 * 1000;
+  await advance(g.ctx(g.tv!), { phaseId: g.tv!.view!.phaseId });
+  g.sync();
+  expect(g.phase).toBe("write");
 });

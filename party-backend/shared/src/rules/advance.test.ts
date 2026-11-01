@@ -32,12 +32,12 @@ test("on time: moves one phase; the same call repeated is then stale (idempotent
   expect(advance(r.state, i).signal).toBe("STALE_PHASE");
 });
 
-test("very late call moves one phase only; the new deadline is measured from now", () => {
+test("very late call moves one phase only; write has no timer", () => {
   const sim = newGame(5);
   const late = sim.s.phaseEndsAt + 10 * 60 * 1000;
   const r = advance(sim.s, input(sim.s, late));
   expect(r.state.phase).toBe("write");
-  expect(r.state.phaseEndsAt).toBe(late + 45000);
+  expect(r.state.phaseEndsAt).toBe(0);
 });
 
 test("deterministic: same seed, same inputs, same game", () => {

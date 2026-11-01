@@ -4,11 +4,12 @@ import { planNext } from "./planNext";
 import { reconcile } from "./reconcile";
 import { type AdvanceInput, type EngineEvent, type GameState, type Ok, TRANSITION_MS } from "./types";
 import { clone } from "./util";
+import { NO_TIMER } from "./types";
 
 function step(s: GameState, i: AdvanceInput, c: Ctx, events: EngineEvent[]): void {
   switch (s.phase) {
     case "intro":
-      return setPhase(s, "write", i.now + s.settings.writeSecs * 1000, events);
+      return setPhase(s, "write", NO_TIMER, events);
     case "write":
       return resolveWrite(s, i.answers ?? {}, c, events);
     case "vote":
@@ -42,7 +43,7 @@ export function advance(state: GameState, i: AdvanceInput): Ok {
   const c: Ctx = { now: i.now, rng: i.rng, promptIds: i.promptIds };
   reconcile(s, c, events);
   const live = s.phase !== "lobby" && s.phase !== "final" && s.pausedAt === undefined;
-  if (live && s.phaseId === state.phaseId && (i.now >= s.phaseEndsAt || earlyEnd(s, i.answers, i.votes))) step(s, i, c, events);
+  if (live && s.phaseId === state.phaseId && ((s.phaseEndsAt > 0 && i.now >= s.phaseEndsAt) || earlyEnd(s, i.answers, i.votes))) step(s, i, c, events);
   forfeitAbsent(s, c, events); // a match that just started may already have an absent contestant
   if (JSON.stringify(s) === JSON.stringify(state)) return { state, events: [], signal: "TOO_EARLY" };
   return { state: s, events };

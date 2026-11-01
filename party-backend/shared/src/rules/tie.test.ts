@@ -24,28 +24,14 @@ test("more votes wins; winner is the author of the winning side", () => {
   expect([m.a, m.b]).toContain(r.winner);
 });
 
-test("exactly one answer wins by default; no vote phase", () => {
+test("write has no timer: one answer, or none, never ends the phase on its own", () => {
   const sim = newGame(5, {}, 2);
   until(sim, (s) => s.phase === "write");
   const m = sim.s.match!;
+  expect(sim.s.phaseEndsAt).toBe(0);
   sim.answers[m.b] = "only me";
-  adv(sim); // deadline
-  expect(sim.s.phase).toBe("reveal");
-  expect(reveals(sim).at(-1)).toMatchObject({ outcome: "win", reason: "default", winner: m.b });
-});
-
-test("both blank: forced reprompt (no tiebreak phase), new prompt, new answer key", () => {
-  const sim = newGame(5, {}, 2);
-  until(sim, (s) => s.phase === "write");
-  const { promptId, ak } = sim.s.match!;
-  adv(sim);
-  expect(sim.s.phase).toBe("reveal");
-  expect(reveals(sim).at(-1)).toMatchObject({ outcome: "tie", reason: "blank" });
-  adv(sim);
+  adv(sim, sim.now + 60 * 60 * 1000);
   expect(sim.s.phase).toBe("write");
-  expect(sim.s.match!.promptId).not.toBe(promptId);
-  expect(sim.s.match!.ak).not.toBe(ak);
-  expect(sim.s.match!.rp).toBe(1);
 });
 
 test("identical answers (case and whitespace insensitive): Great minds, forced reprompt", () => {
@@ -174,7 +160,6 @@ test("validateAnswer / validateVote / completion hints", () => {
   expect(validateAnswer(sim.s, m.a, "x".repeat(61), sim.now)).toEqual({ error: "ANSWER_TOO_LONG" });
   expect(validateAnswer(sim.s, m.a, "x".repeat(60), sim.now)).toMatchObject({ ok: true });
   expect(validateAnswer(sim.s, m.a, " hi ", sim.now)).toEqual({ ok: true, text: "hi", ak: m.ak });
-  expect(validateAnswer(sim.s, m.a, "late", sim.s.phaseEndsAt + 1)).toEqual({ error: "WRONG_PHASE" });
   expect(validateVote(sim.s, crowd, "A", sim.now)).toEqual({ error: "WRONG_PHASE" });
   expect(isWriteComplete(sim.s, 1)).toBe(false);
   expect(isWriteComplete(sim.s, 2)).toBe(true);
