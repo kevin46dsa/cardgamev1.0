@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { BACKOFF_MS, CONN, GIVE_UP_AFTER_MS, PING_INTERVAL_MS } from "../config";
+import { BACKOFF_MS, CONN, GIVE_UP_AFTER_MS, PING_INTERVAL_MS, STALE_AFTER_MS } from "../config";
 import { createSocketFactory } from "../testing/fakeSocket";
 import { createConnection } from "./connection";
 
@@ -91,19 +91,15 @@ describe("connection manager", () => {
     expect(socketFactory.sockets).toHaveLength(count + 1);
   });
 
-  it("pings every 5 minutes only while idle ping is enabled", () => {
+  it("pings while open and reopens a socket that has gone silent", () => {
     const { conn, socketFactory } = setup();
     conn.connect();
     const ws = socketFactory.last();
     ws.open();
-    vi.advanceTimersByTime(PING_INTERVAL_MS * 2);
-    expect(ws.sent.filter((m) => m.action === "ping")).toHaveLength(0);
-    conn.setIdlePing(true);
-    vi.advanceTimersByTime(PING_INTERVAL_MS * 2);
-    expect(ws.sent.filter((m) => m.action === "ping")).toHaveLength(2);
-    conn.setIdlePing(false);
     vi.advanceTimersByTime(PING_INTERVAL_MS);
-    expect(ws.sent.filter((m) => m.action === "ping")).toHaveLength(2);
+    expect(ws.sent.filter((m) => m.action === "ping")).toHaveLength(1);
+    vi.advanceTimersByTime(STALE_AFTER_MS);
+    expect(socketFactory.sockets).toHaveLength(2);
   });
 
   it("close stops reconnecting", () => {

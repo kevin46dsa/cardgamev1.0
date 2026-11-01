@@ -1,4 +1,4 @@
-import { BACKOFF_MS, CONN, GIVE_UP_AFTER_MS, PING_INTERVAL_MS } from "../config";
+import { BACKOFF_MS, CONN, GIVE_UP_AFTER_MS, PING_INTERVAL_MS, STALE_AFTER_MS } from "../config";
 import { ping } from "./actions";
 
 const OPEN = 1;
@@ -21,7 +21,7 @@ export function createConnection({ url, socketFactory, onMessage, onStatus, hand
   let attempt = 0;
   let retryTimer = null;
   let pingTimer = null;
-  let pingWanted = false;
+  let lastMsgAt = nowFn();
   let downSince = null;
   let stopped = true;
   let status = CONN.IDLE;
@@ -42,7 +42,12 @@ export function createConnection({ url, socketFactory, onMessage, onStatus, hand
   };
   const startPing = () => {
     stopPing();
-    if (pingWanted && isOpen()) pingTimer = setInterval(() => send(ping()), PING_INTERVAL_MS);
+    if (!isOpen()) return;
+    // Heartbeat: a dead-but-"open" mobile socket never fires onclose, so reconnect (rejoin => fresh snapshot) when silent.
+    pingTimer = setInterval(() => {
+      if (nowFn() - lastMsgAt > STALE_AFTER_MS) open();
+      else send(ping());
+    }, PING_INTERVAL_MS);
   };
 
   function send(message) {
@@ -61,6 +66,7 @@ export function createConnection({ url, socketFactory, onMessage, onStatus, hand
       if (ws !== socket) return;
       attempt = 0;
       downSince = null;
+      lastMsgAt = nowFn();
       setStatus(CONN.OPEN);
       const first = handshake();
       if (first) send(first);
@@ -68,6 +74,7 @@ export function createConnection({ url, socketFactory, onMessage, onStatus, hand
     };
     ws.onmessage = (event) => {
       if (ws !== socket) return;
+      lastMsgAt = nowFn();
       let msg;
       try {
         msg = JSON.parse(event.data);
@@ -116,10 +123,13 @@ export function createConnection({ url, socketFactory, onMessage, onStatus, hand
   }
 
   function onVisibility() {
-    if (doc.hidden || stopped || isOpen() || status === CONN.FAILED) return;
-    if (status === CONN.RECONNECTING && retryTimer === null) open();
+    if (doc.hidden || stopped || status === CONN.FAILED) return;
+    // Back in the foreground: the socket may be silently dead and updates missed, so always resync via a fresh (re)join.
+    if (isOpen() || (status === CONN.RECONNECTING && retryTimer === null)) open();
   }
   doc.addEventListener("visibilitychange", onVisibility);
+  const win = typeof window === "undefined" ? null : window;
+  win?.addEventListener("online", onVisibility);
 
   return {
     /** Open the socket (no-op when already open or connecting). */
@@ -137,18 +147,15 @@ export function createConnection({ url, socketFactory, onMessage, onStatus, hand
     },
     send,
     isOpen,
-    /** Enable or disable the 5-minute idle ping. */
-    setIdlePing(wanted) {
-      pingWanted = wanted;
-      startPing();
-      if (!wanted) stopPing();
-    },
+    /** Kept for callers; the heartbeat now always runs while open. */
+    setIdlePing() {},
     /** Close for good and remove listeners. */
     close() {
       stopped = true;
       clearRetry();
       stopPing();
       doc.removeEventListener("visibilitychange", onVisibility);
+      win?.removeEventListener("online", onVisibility);
       if (socket) detach(socket);
       setStatus(CONN.IDLE);
     },
