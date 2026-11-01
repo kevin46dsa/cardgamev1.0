@@ -1,0 +1,43 @@
+name: Party backend deploy
+
+on:
+  push:
+    branches: [master]
+    paths: ["party-backend/**"]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+defaults:
+  run:
+    working-directory: party-backend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: party-backend/package-lock.json
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+
+      # No long-lived AWS keys: the role is created by the stack (infra/lib/ci/createGithubDeployRole.ts)
+      # and trusts only this repo on master.
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/PartyGamesGithubActionsDeployRole
+          aws-region: us-east-2
+
+      - run: npx cdk deploy PartyGamesBackendStack --require-approval never
+        working-directory: party-backend/infra
+        env:
+          CDK_DEFAULT_ACCOUNT: ${{ secrets.AWS_ACCOUNT_ID }}

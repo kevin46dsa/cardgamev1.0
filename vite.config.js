@@ -12,6 +12,6 @@ export default defineConfig({
     setupFiles: "./src/setupTests.js",
     globals: true,
     pool: "threads",
-    exclude: ["e2e/**", "node_modules/**"],
+    exclude: ["e2e/**", "node_modules/**", "party-backend/**"],
   },
 });

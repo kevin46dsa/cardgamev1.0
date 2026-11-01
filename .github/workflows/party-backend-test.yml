@@ -1,0 +1,28 @@
+name: Party backend tests
+
+on:
+  pull_request:
+    paths: ["party-backend/**", ".github/workflows/party-backend-test.yml"]
+  push:
+    branches-ignore: [master]
+    paths: ["party-backend/**", ".github/workflows/party-backend-test.yml"]
+
+defaults:
+  run:
+    working-directory: party-backend
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: party-backend/package-lock.json
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
