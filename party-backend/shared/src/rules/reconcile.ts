@@ -25,7 +25,7 @@ export function reconcile(s: GameState, c: Ctx, events: EngineEvent[]): void {
         events.push({ type: "paused", until: s.pausedUntil });
       }
     } else if (n >= MIN_PLAYERS) {
-      s.phaseEndsAt += now - s.pausedAt;
+      if (s.phaseEndsAt > 0) s.phaseEndsAt += now - s.pausedAt;
       for (const p of s.players) if (!p.online) p.offlineSince = now; // fresh grace
       delete s.pausedAt;
       delete s.pausedUntil;

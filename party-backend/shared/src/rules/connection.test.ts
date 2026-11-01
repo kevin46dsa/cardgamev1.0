@@ -115,7 +115,7 @@ test("fewer than 3 connected pauses; 3 again resumes with the deadline pushed ba
   expect(sim.s.phase).toBe("write");
   expect(sim.s.phaseEndsAt).toBe(ends);
   const back = apply(sim, rejoinPlayer(sim.s, idle[1]!, T + 21000, rng));
-  expect(back.events).toContainEqual({ type: "resumed", endsAt: ends + 20000 });
+  expect(back.events).toContainEqual({ type: "resumed", endsAt: ends });
   expect(sim.s.pausedAt).toBeUndefined();
   expect(sim.s.players.find((x) => x.id === idle[0])!.offlineSince).toBe(T + 21000); // fresh grace
 });

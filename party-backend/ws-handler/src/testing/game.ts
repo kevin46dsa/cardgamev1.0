@@ -92,7 +92,7 @@ export class Game {
       const mine = v.match.contestants.includes(b.id);
       if (v.phase === "write" && mine) {
         b.acted = v.phaseId;
-        if (this.rand() < (this.o.pAnswer ?? 0.9)) {
+        if (this.rand() < (this.o.pAnswer ?? 1)) {
           // both contestants derive the same verdict from the match number, so "identical answers" happens on purpose
           const same = (v.match.n * 31 + v.match.replay * 17) % 100 < (this.o.pSame ?? 0.08) * 100;
           const text = same ? `same ${v.match.n} ${v.match.replay}` : `ans ${++this.seq} by ${b.name}`;
@@ -101,7 +101,7 @@ export class Game {
         }
       } else if (v.phase === "vote" && !mine) {
         b.acted = v.phaseId;
-        if (this.rand() < (this.o.pVote ?? 0.95)) { await b.send({ action: "castVote", side: this.rand() < 0.5 ? "A" : "B" }); }
+        if (this.rand() < (this.o.pVote ?? 1)) { await b.send({ action: "castVote", side: this.rand() < 0.5 ? "A" : "B" }); }
       } else if (v.phase === "tiebreak" && mine) {
         b.acted = v.phaseId;
         await b.send({ action: "chooseTieBreak", choice: this.rand() < 0.5 ? "reprompt" : "revote" });

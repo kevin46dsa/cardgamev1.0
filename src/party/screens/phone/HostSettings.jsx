@@ -1,14 +1,5 @@
 import React from "react";
-import { ROUNDS_OPTIONS, VOTE_SECS_RANGE, WRITE_SECS_RANGE } from "../../config";
-
-function Range({ id, label, range, value, onChange }) {
-  return (
-    <div className="party-field">
-      <label htmlFor={id}>{label}: {value}s</label>
-      <input id={id} type="range" min={range.min} max={range.max} step={range.step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
-    </div>
-  );
-}
+import { ROUNDS_OPTIONS } from "../../config";
 
 /**
  * Host-only lobby settings. Each change is sent as a single updateSettings.
@@ -18,8 +9,6 @@ export default function HostSettings({ settings, onChange }) {
   return (
     <fieldset className="party-card" style={{ border: 0 }}>
       <legend className="party-title" style={{ fontSize: "1.2rem" }}>Settings</legend>
-      <Range id="party-write" label="Writing time" range={WRITE_SECS_RANGE} value={settings.writeSecs} onChange={(writeSecs) => onChange({ writeSecs })} />
-      <Range id="party-vote" label="Voting time" range={VOTE_SECS_RANGE} value={settings.voteSecs} onChange={(voteSecs) => onChange({ voteSecs })} />
       <div className="party-field">
         <label htmlFor="party-rounds">Rounds</label>
         <select id="party-rounds" className="party-input" value={settings.rounds} onChange={(e) => onChange({ rounds: Number(e.target.value) })}>

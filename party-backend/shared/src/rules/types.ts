@@ -23,6 +23,8 @@ export const GRACE_MS = 15000; // contestant offline this long = forfeit
 export const HOST_AWAY_MS = 30000; // host offline this long = handoff
 export const PAUSE_MS = 60000; // paused this long = back to lobby
 export const INTRO_MS = 5000;
+/** phaseEndsAt value meaning "no timer": write and vote wait for everyone instead of a clock. */
+export const NO_TIMER = 0;
 export const TIEBREAK_MS = 8000;
 export const REVEAL_MS = 8000;
 export const TRANSITION_MS = 5000;

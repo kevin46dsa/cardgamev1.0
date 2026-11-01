@@ -49,8 +49,8 @@ describe("full games through the public handler", () => {
   });
 });
 
-test("the bots really hit ties, identical answers, defaults, replays and tiebreakers", () => {
-  for (const k of ["tiebreak", "replay", "win/votes", "win/default", "identical/identical", "win/tiebreaker"]) expect(seen, k).toContain(k);
+test("the bots really hit ties, identical answers, replays and tiebreakers", () => {
+  for (const k of ["tiebreak", "replay", "win/votes", "identical/identical", "win/tiebreaker"]) expect(seen, k).toContain(k);
 });
 
 test("the leak checks are not vacuous: a planted leak is caught", async () => {

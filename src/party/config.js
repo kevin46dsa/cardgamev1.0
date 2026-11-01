@@ -29,8 +29,6 @@ export const MAX_ANSWER_LENGTH = 60;
 export const ROOM_CODE_LENGTH = 4;
 export const PAIR_CODE_LENGTH = 4;
 
-export const WRITE_SECS_RANGE = { min: 10, max: 120, step: 5 };
-export const VOTE_SECS_RANGE = { min: 5, max: 60, step: 5 };
 export const ROUNDS_OPTIONS = [1, 2, 3];
 
 export const STORAGE_KEYS = { phone: "party.session", tv: "party.tv" };

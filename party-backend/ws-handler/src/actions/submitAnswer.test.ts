@@ -77,9 +77,3 @@ test("two answers landing at the same moment still end the phase", async () => {
   }
 });
 
-test("a late answer (after the deadline) is WRONG_PHASE", async () => {
-  const g = await writing();
-  g.w.clock.t = g.ref.view!.endsAt + 1;
-  await submitAnswer(g.ctx(g.contestants[0]!), { text: "late" });
-  expect(g.contestants[0]!.errors()).toEqual(["WRONG_PHASE"]);
-});

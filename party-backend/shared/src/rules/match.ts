@@ -2,7 +2,7 @@ import { pick } from "./rng";
 import { breakTie, resolveTieChoice } from "./resolveTie";
 import {
   type EngineEvent, type GameState, type Match, type Outcome, type Phase, type Rng, type Side,
-  INTRO_MS, MAX_ANSWER, REVEAL_MS, TIEBREAK_MS,
+  INTRO_MS, MAX_ANSWER, NO_TIMER, REVEAL_MS, TIEBREAK_MS,
 } from "./types";
 import { crowdIds, find, hillOf, isAbsent } from "./util";
 
@@ -60,7 +60,7 @@ export function replay(s: GameState, how: "reprompt" | "revote", c: Ctx, events:
   } else m.vt++;
   keys(m);
   events.push({ type: "matchStarted", n: m.n, kind: m.kind, a: m.a, b: m.b, fate: m.fate, promptId: m.promptId, replay: how });
-  setPhase(s, how === "reprompt" ? "write" : "vote", c.now + (how === "reprompt" ? s.settings.writeSecs : s.settings.voteSecs) * 1000, events);
+  setPhase(s, how === "reprompt" ? "write" : "vote", NO_TIMER, events);
 }
 
 function payload(m: Match, withAuthors: boolean): EngineEvent {
@@ -107,7 +107,7 @@ export function resolveWrite(s: GameState, answers: Record<string, string>, c: C
   if (key(ta) === key(tb)) return tie(s, { outcome: "identical", reason: "identical" }, c, events);
   m.flip = c.rng() < 0.5;
   m.texts = m.flip ? { A: tb, B: ta } : { A: ta, B: tb };
-  setPhase(s, "vote", c.now + s.settings.voteSecs * 1000, events);
+  setPhase(s, "vote", NO_TIMER, events);
 }
 
 export function resolveVote(s: GameState, votes: Record<string, Side>, c: Ctx, events: EngineEvent[]): void {

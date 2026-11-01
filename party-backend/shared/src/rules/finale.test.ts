@@ -11,7 +11,7 @@ function finaleSim(n: number, c: number, seed = 1): Sim {
   sim.s.act = 3;
   sim.s.round = 1;
   sim.s.phase = "reveal";
-  sim.s.phaseEndsAt = 0;
+  sim.s.phaseEndsAt = 1; // already due
   sim.s.match = { kind: "valley", a: "p0", b: "p1", n: 1, promptId: "x", rp: 0, vt: 0, ak: "1.0", vk: "1.0.0", startHill: { a: null, b: null } };
   return sim;
 }
